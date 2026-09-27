@@ -3,3 +3,8 @@ __pycache__/
 *.pyc
 *.sqlite
 *.zip
+*.py[cod]
+.venv/
+venv/
+data/
+runs/

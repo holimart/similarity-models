@@ -1,0 +1,15 @@
+{
+  "harness": "rapidocr",
+  "device": "cpu",
+  "lang": "cs",
+  "model_family": "PP-OCRv6",
+  "model_size": "small",
+  "engine": "onnxruntime",
+  "det_limit_side_len": 1280,
+  "det_limit_type": "max",
+  "det_thresh": 0.3,
+  "box_thresh": 0.5,
+  "unclip_ratio": 1.6,
+  "rec_score_thresh": 0.0,
+  "use_orientation": true
+}

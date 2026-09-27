@@ -1,0 +1,12 @@
+# Keep OCR dependencies isolated from the legacy research environment in requirements.txt.
+# CPU-friendly starting points; choose a matching PaddlePaddle GPU wheel separately if needed.
+paddleocr>=3.0,<4
+rapidocr>=3.9,<4
+onnxruntime>=1.18
+paddlepaddle>=3.0
+pillow>=10
+requests>=2.31
+lmdb>=1.4
+
+# Optional dataset export from CORD Parquet files:
+# pyarrow>=15
