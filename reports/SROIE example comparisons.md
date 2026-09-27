@@ -4,9 +4,9 @@ Examples are drawn from shared `SROIE corrected mirror (first 100; ASCII-fold sc
 
 ## Best (lowest PaddleOCR CER; ties prefer longer text)
 
-- Image: `data/sroie-mirror/img/077.jpg`
+- Image: `$DATASETS_ROOT/source/sroie-mirror/img/077.jpg`
 
-![Receipt image](../data/sroie-mirror/img/077.jpg)
+![Receipt image](/mnt/sportsmarket/datasets/source/sroie-mirror/img/077.jpg)
 
 - Split / record: `unspecified / 77`
 - PaddleOCR: CER `0.005`, WER `0.042`
@@ -23,9 +23,9 @@ BANH MI CAFE DIMILIKI: BANH MI CAFE SDN BHD 1110644-W NO. 1 JALAN PUTERI 7/10 BA
 
 ## Median (nearest the median PaddleOCR per-image CER)
 
-- Image: `data/sroie-mirror/img/053.jpg`
+- Image: `$DATASETS_ROOT/source/sroie-mirror/img/053.jpg`
 
-![Receipt image](../data/sroie-mirror/img/053.jpg)
+![Receipt image](/mnt/sportsmarket/datasets/source/sroie-mirror/img/053.jpg)
 
 - Split / record: `unspecified / 53`
 - PaddleOCR: CER `0.044`, WER `0.140`
@@ -42,9 +42,9 @@ UNIHAKKA INTERNATIONAL SDN BHD 24 MAR 2018 18:23 (867388-U) 12, JALAN TAMPOI 7/4
 
 ## Worst (highest PaddleOCR CER; ties prefer longer text)
 
-- Image: `data/sroie-mirror/img/015.jpg`
+- Image: `$DATASETS_ROOT/source/sroie-mirror/img/015.jpg`
 
-![Receipt image](../data/sroie-mirror/img/015.jpg)
+![Receipt image](/mnt/sportsmarket/datasets/source/sroie-mirror/img/015.jpg)
 
 - Split / record: `unspecified / 15`
 - PaddleOCR: CER `0.194`, WER `0.321`

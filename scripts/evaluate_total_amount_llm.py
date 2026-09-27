@@ -14,6 +14,7 @@ import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from ocr_lab.amounts import amount_methods, cord_total, normalize_amount, sroie_totals
+from ocr_lab.data_paths import source_dataset
 
 
 OLLAMA_CHAT = "http://localhost:11434/api/chat"
@@ -145,7 +146,7 @@ def main() -> int:
     think_value: bool | str = False if think_mode == "off" else think_mode
     num_predict = args.num_predict or (128 if args.model.startswith("gpt-oss") else 40)
 
-    root = args.root or Path("data/cord-v2" if args.dataset == "cord" else "data/sroie-mirror")
+    root = args.root or source_dataset("cord-v2" if args.dataset == "cord" else "sroie-mirror")
     manifest_rows, target_map = load_dataset(args.dataset, root)
     row_lookup = (
         {int(row.get("row_id", -1)): row for row in manifest_rows}

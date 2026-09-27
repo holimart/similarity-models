@@ -37,8 +37,8 @@ The important gap is between **correct amount recognized somewhere** and **corre
 
 Two concrete ranking fixes:
 
-- On CORD test image `data/cord-v2/images/test/0000.jpg`, the reference total is `60.000`. The OCR text line is `TOTAL (Qty 2.00 60.000`; keyword-nearby selects the first numeric token (`2.00`, the quantity), while the CORD-trained candidate ranker selects `60.000`.
-- On SROIE image `data/sroie-mirror/img/023.jpg`, the reference total is `27.55`. The PaddleOCR keyword baseline chooses `26.00`; the CORD-trained ranker chooses the `27.55` candidate already present in the OCR detections.
+- On CORD test image `$DATASETS_ROOT/source/cord-v2/images/test/0000.jpg`, the reference total is `60.000`. The OCR text line is `TOTAL (Qty 2.00 60.000`; keyword-nearby selects the first numeric token (`2.00`, the quantity), while the CORD-trained candidate ranker selects `60.000`.
+- On SROIE image `$DATASETS_ROOT/source/sroie-mirror/img/023.jpg`, the reference total is `27.55`. The PaddleOCR keyword baseline chooses `26.00`; the CORD-trained ranker chooses the `27.55` candidate already present in the OCR detections.
 
 ## Ground-truth coverage and caveats
 
@@ -52,16 +52,16 @@ Two concrete ranking fixes:
 
 ```bash
 python3 scripts/evaluate_total_amount.py --dataset cord \
-  --predictions runs/cord-paddleocr.jsonl --labels data/cord-v2/labels.jsonl \
+  --predictions runs/cord-paddleocr.jsonl --labels "$DATASETS_ROOT/source/cord-v2/labels.jsonl" \
   --split test --train-predictions runs/cord-paddleocr.jsonl \
-  --train-labels data/cord-v2/labels.jsonl --train-split validation \
+  --train-labels "$DATASETS_ROOT/source/cord-v2/labels.jsonl" --train-split validation \
   --ranker-output runs/total-amount/cord-paddle-ranker.json \
   --output runs/total-amount/cord-paddle-test.json
 
 python3 scripts/evaluate_total_amount.py --dataset sroie \
   --predictions runs/sroie-paddleocr-100.jsonl \
   --train-predictions runs/cord-paddleocr.jsonl \
-  --train-labels data/cord-v2/labels.jsonl --train-root data/cord-v2 \
+  --train-labels "$DATASETS_ROOT/source/cord-v2/labels.jsonl" --train-root "$DATASETS_ROOT/source/cord-v2" \
   --train-dataset cord --train-split validation \
   --ranker-output runs/total-amount/cord-to-sroie-ranker.json \
   --output runs/total-amount/sroie-paddle.json

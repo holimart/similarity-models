@@ -4,9 +4,9 @@ Examples are drawn from shared `CORD (ASCII-fold scoring)` predictions. Best/med
 
 ## Best (lowest PaddleOCR CER; ties prefer longer text)
 
-- Image: `data/cord-v2/images/validation/0052.jpg`
+- Image: `$DATASETS_ROOT/source/cord-v2/images/validation/0052.jpg`
 
-![Receipt image](../data/cord-v2/images/validation/0052.jpg)
+![Receipt image](/mnt/sportsmarket/datasets/source/cord-v2/images/validation/0052.jpg)
 
 - Split / record: `validation / 52`
 - PaddleOCR: CER `0.000`, WER `0.000`
@@ -23,9 +23,9 @@ Examples are drawn from shared `CORD (ASCII-fold scoring)` predictions. Best/med
 
 ## Median (nearest the median PaddleOCR per-image CER)
 
-- Image: `data/cord-v2/images/test/0018.jpg`
+- Image: `$DATASETS_ROOT/source/cord-v2/images/test/0018.jpg`
 
-![Receipt image](../data/cord-v2/images/test/0018.jpg)
+![Receipt image](/mnt/sportsmarket/datasets/source/cord-v2/images/test/0018.jpg)
 
 - Split / record: `test / 18`
 - PaddleOCR: CER `0.135`, WER `0.308`
@@ -42,9 +42,9 @@ Propolis Cair 1 156000 156000 Sub Tofal 156000 Tunai 156000 Rp. 0 Kembalian
 
 ## Worst (highest PaddleOCR CER; ties prefer longer text)
 
-- Image: `data/cord-v2/images/test/0098.jpg`
+- Image: `$DATASETS_ROOT/source/cord-v2/images/test/0098.jpg`
 
-![Receipt image](../data/cord-v2/images/test/0098.jpg)
+![Receipt image](/mnt/sportsmarket/datasets/source/cord-v2/images/test/0098.jpg)
 
 - Split / record: `test / 98`
 - PaddleOCR: CER `1.297`, WER `1.148`

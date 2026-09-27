@@ -10,10 +10,14 @@ from __future__ import annotations
 import argparse
 import io
 import json
+import sys
 import zipfile
 from pathlib import Path, PurePosixPath
 
 import requests
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from ocr_lab.data_paths import source_dataset
 
 ARCHIVE_URL = "https://codeload.github.com/zzzDavid/ICDAR-2019-SROIE/zip/refs/heads/master"
 SOURCE_URL = "https://github.com/zzzDavid/ICDAR-2019-SROIE"
@@ -21,7 +25,7 @@ SOURCE_URL = "https://github.com/zzzDavid/ICDAR-2019-SROIE"
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--dest", type=Path, default=Path("data/sroie-mirror"))
+    parser.add_argument("--dest", type=Path, default=source_dataset("sroie-mirror"))
     args = parser.parse_args()
     args.dest.mkdir(parents=True, exist_ok=True)
     response = requests.get(ARCHIVE_URL, timeout=(30, 300))

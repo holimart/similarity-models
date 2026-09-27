@@ -10,13 +10,14 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from ocr_lab.amounts import score_predictions, train_candidate_ranker
+from ocr_lab.data_paths import source_dataset
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", choices=("cord", "sroie"), required=True)
     parser.add_argument("--predictions", type=Path, required=True, help="Raw evaluator per-image JSONL (not ASCII-folded rescoring output)")
-    parser.add_argument("--root", type=Path, help="Dataset root; defaults to data/cord-v2 or data/sroie-mirror")
+    parser.add_argument("--root", type=Path, help="Dataset root; defaults to the configured shared workspace")
     parser.add_argument("--labels", type=Path, help="Label manifest; defaults to the dataset root's labels.jsonl")
     parser.add_argument("--output", type=Path, help="Optional detailed JSON output")
     parser.add_argument("--split", help="Optional prediction split filter, e.g. test")
@@ -28,7 +29,7 @@ def main() -> int:
     parser.add_argument("--ranker-output", type=Path, help="Optional trained ranker JSON artifact")
     args = parser.parse_args()
 
-    root = args.root or Path("data/cord-v2" if args.dataset == "cord" else "data/sroie-mirror")
+    root = args.root or source_dataset("cord-v2" if args.dataset == "cord" else "sroie-mirror")
     labels_path = args.labels or root / "labels.jsonl"
     manifest: list[dict[str, Any]] = [
         json.loads(line) for line in labels_path.read_text(encoding="utf-8").splitlines() if line.strip()

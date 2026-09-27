@@ -5,12 +5,16 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from ocr_lab.data_paths import source_dataset
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--root", type=Path, default=Path("data/sroie-mirror"))
+    parser.add_argument("--root", type=Path, default=source_dataset("sroie-mirror"))
     args = parser.parse_args()
     rows = []
     for image_path in sorted((args.root / "img").glob("*.jpg")):

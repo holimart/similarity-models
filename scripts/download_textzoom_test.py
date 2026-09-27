@@ -4,9 +4,13 @@ from __future__ import annotations
 
 import argparse
 import re
+import sys
 from pathlib import Path
 
 import requests
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from ocr_lab.data_paths import source_dataset
 
 FILES = {
     "easy": ("1PHaoh-VdLBk1NgjsNag21rSpQeJKpurr", 12_600_000),
@@ -17,7 +21,7 @@ FILES = {
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--dest", type=Path, default=Path("data/textzoom/test"))
+    parser.add_argument("--dest", type=Path, default=source_dataset("textzoom/test"))
     args = parser.parse_args()
     args.dest.mkdir(parents=True, exist_ok=True)
     session = requests.Session()

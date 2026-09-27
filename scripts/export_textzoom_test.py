@@ -4,16 +4,20 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 import lmdb
 from PIL import Image
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from ocr_lab.data_paths import derived_dataset, source_dataset
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--source", type=Path, default=Path("data/textzoom/test"))
-    parser.add_argument("--dest", type=Path, default=Path("data/textzoom/test_export"))
+    parser.add_argument("--source", type=Path, default=source_dataset("textzoom/test"))
+    parser.add_argument("--dest", type=Path, default=derived_dataset("textzoom/test_export"))
     parser.add_argument("--resolution", choices=("lr", "hr", "both"), default="lr")
     args = parser.parse_args()
     args.dest.mkdir(parents=True, exist_ok=True)

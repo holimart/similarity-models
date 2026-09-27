@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import math
 import re
+import unicodedata
 from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from pathlib import Path
@@ -61,12 +62,12 @@ def _center(record: dict[str, Any]) -> tuple[float, float]:
 
 
 def _anchor_weight(text: str) -> float:
-    value = text.casefold()
+    value = "".join(char for char in unicodedata.normalize("NFKD", text.casefold()) if not unicodedata.combining(char))
     if re.search(r"\b(subtotal|sub total)\b", value):
         return 0.0
-    if re.search(r"\b(grand total|amount due|amount payable|total due|total payable|total incl(?:usive)?|total amount)\b", value):
+    if re.search(r"\b(grand total|amount due|amount payable|total due|total payable|total incl(?:usive)?|total amount|celkova castka|castka k uhrade|k uhrade)\b", value):
         return 9.0
-    if re.search(r"\b(total|jumlah)\b", value):
+    if re.search(r"\b(total|jumlah|celkem)\b", value):
         return 7.0
     if re.search(r"\bamount\b", value):
         return 3.0
@@ -83,6 +84,8 @@ def amount_methods(records: list[dict[str, Any]], dataset: str, image_height: in
         if weight:
             anchors.append((x, y, weight))
         for match in AMOUNT_RE.finditer(text):
+            if re.match(r"\s*%", text[match.end():]):
+                continue
             raw = match.group(0)
             digit_count = sum(char.isdigit() for char in raw)
             normalized = normalize_amount(raw, dataset)

@@ -6,5 +6,6 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
+.env
 data/
 runs/

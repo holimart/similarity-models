@@ -8,6 +8,16 @@ Use Python 3.10+ in a virtual environment. Install CPU OCR support with `python 
 
 Model weights are downloaded by the selected OCR package on first use unless explicit local model paths are supplied. Pre-download them before operating offline. PaddleOCR stores pipeline model files under `~/.paddlex/official_models`; RapidOCR includes its default ONNX models with the installed package. `PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=True` skips PaddleX's host connectivity check, but does not substitute for downloading any missing weights. Every output records package versions and image hash; keep the selected model artifacts and config alongside the outputs for exact reproduction.
 
+Dataset paths are read from `DATASETS_ROOT` in `.env` (or the process environment). The local workspace is `/mnt/sportsmarket/datasets`; `COCO_ROOT` remains pointed at its `coco2017/` child. Python commands load `.env` directly. To use the same paths in shell command arguments, load the file first:
+
+```bash
+set -a
+. ./.env
+set +a
+```
+
+The workspace is organized into `source/` (downloaded datasets), `derived/` (exports), `manual/` (local annotations), and `coco2017/` (the existing COCO benchmark copy). These local datasets and manual labels remain outside the repository and are not redistributed by this code.
+
 ## Run
 
 ```bash
@@ -20,8 +30,8 @@ The checked-in `rapidocr_cpu.json` selects PP-OCRv6 small, ONNX Runtime CPU, and
 ```bash
 python -m ocr_lab.evaluate --config ocr_lab/configs/rapidocr_cpu_no_orientation.json --output runs/cord-rapid.jsonl
 python -m ocr_lab.evaluate --config ocr_lab/configs/paddleocr_cpu.json --output runs/cord-paddle.jsonl
-python -m ocr_lab.evaluate --labels data/textzoom/test_export/labels.jsonl --resolution lr --limit 100 --output runs/textzoom-lr-rapid.jsonl
-python -m ocr_lab.evaluate --harness paddleocr --config ocr_lab/configs/paddleocr_cpu.json --labels data/textzoom/test_export/labels.jsonl --resolution lr --limit 100 --output runs/textzoom-lr-paddle.jsonl
+python -m ocr_lab.evaluate --labels "$DATASETS_ROOT/derived/textzoom/test_export/labels.jsonl" --resolution lr --limit 100 --output runs/textzoom-lr-rapid.jsonl
+python -m ocr_lab.evaluate --harness paddleocr --config ocr_lab/configs/paddleocr_cpu.json --labels "$DATASETS_ROOT/derived/textzoom/test_export/labels.jsonl" --resolution lr --limit 100 --output runs/textzoom-lr-paddle.jsonl
 ```
 
 CORD is Indonesian, so its scores are only a pipeline smoke-test / cross-system comparison—not Czech quality estimates. TextZoom supplies single-word crops (real low-resolution camera captures plus high-resolution references), so `--resolution lr` / `hr` compares recognition through the full OCR pipeline. These local CER/WER summaries are diagnostic: inspect paired predictions and use official benchmark evaluation for formal claims.
@@ -38,7 +48,7 @@ Available options include device/backend, language, model family/size metadata, 
 
 ## Datasets
 
-Datasets are kept outside the source tree under `data/` and are not redistributed by this code. Local copies include 200 CORD-v2 receipts, the TextZoom test split, the 626-record corrected SROIE mirror subset, and 350 XFUND validation forms. CORD is Indonesian—not Czech—and states CC BY 4.0; TextZoom has no clear dataset-specific redistribution license; the SROIE mirror MIT license does not clearly cover receipt images and this copy is local-only; XFUND states CC BY-NC-SA 4.0. Review each source's terms before reuse/redistribution. See `reports/Czech receipt OCR datasets.md` for research notes. Keep authorized Czech receipt photos in a separate local test set and do not commit them.
+Datasets are stored under `$DATASETS_ROOT`, outside the source tree. Local copies include 200 CORD-v2 receipts, the TextZoom test split, the 626-record corrected SROIE mirror subset, 350 XFUND validation forms, and COCO 2017. CORD is Indonesian—not Czech—and states CC BY 4.0; TextZoom has no clear dataset-specific redistribution license; the SROIE mirror MIT license does not clearly cover receipt images and this copy is local-only; XFUND states CC BY-NC-SA 4.0. Review each source's terms before reuse/redistribution. See `reports/Czech receipt OCR datasets.md` for research notes. Keep authorized Czech receipt photos in a separate local test set and do not commit them.
 
 The official TextZoom test split (scene-text word crops, not receipts) can be downloaded and exported for recognition smoke tests:
 
@@ -54,9 +64,9 @@ The SROIE participant mirror's publicly accessible corrected `data/` subset can 
 ```bash
 python scripts/download_sroie_mirror.py
 python scripts/export_sroie.py
-python -m ocr_lab.evaluate --labels data/sroie-mirror/labels.jsonl --limit 100 --config ocr_lab/configs/rapidocr_cpu_no_orientation.json --output runs/sroie-rapid.jsonl
-python -m ocr_lab.evaluate --labels data/sroie-mirror/labels.jsonl --limit 100 --config ocr_lab/configs/paddleocr_cpu.json --output runs/sroie-paddle.jsonl
-python scripts/make_ocr_examples.py --paddle runs/sroie-paddle.jsonl --rapid runs/sroie-rapid.jsonl --dataset-root data/sroie-mirror --dataset-name "SROIE mirror" --output "reports/SROIE example comparisons.md"
+python -m ocr_lab.evaluate --labels "$DATASETS_ROOT/source/sroie-mirror/labels.jsonl" --limit 100 --config ocr_lab/configs/rapidocr_cpu_no_orientation.json --output runs/sroie-rapid.jsonl
+python -m ocr_lab.evaluate --labels "$DATASETS_ROOT/source/sroie-mirror/labels.jsonl" --limit 100 --config ocr_lab/configs/paddleocr_cpu.json --output runs/sroie-paddle.jsonl
+python scripts/make_ocr_examples.py --paddle runs/sroie-paddle.jsonl --rapid runs/sroie-rapid.jsonl --dataset-root "$DATASETS_ROOT/source/sroie-mirror" --dataset-name "SROIE mirror" --output "reports/SROIE example comparisons.md"
 ```
 
 This mirror contains 626 examples, not the full 1,000-image official challenge. The repository's MIT code license is not clear proof of rights in receipt scans; this copy is retained for local nonprofit research only, with no redistribution. Check with the challenge organizers before sharing data or relying on a public mirror license.
@@ -66,7 +76,7 @@ The official XFUND v1.0 validation releases provide seven-language form images/a
 ```bash
 python scripts/download_xfund_val.py
 python scripts/export_xfund.py
-python -m ocr_lab.evaluate --labels data/xfund-val/labels.jsonl --limit 50 --config ocr_lab/configs/rapidocr_cpu_no_orientation.json --output runs/xfund-rapid.jsonl
+python -m ocr_lab.evaluate --labels "$DATASETS_ROOT/source/xfund-val/labels.jsonl" --limit 50 --config ocr_lab/configs/rapidocr_cpu_no_orientation.json --output runs/xfund-rapid.jsonl
 ```
 
 XFUND is forms (German, Spanish, French, Italian, Japanese, Portuguese, Chinese), not Czech or receipts; it is supplementary multilingual text/layout testing.
@@ -77,16 +87,16 @@ The total-field evaluator compares amount candidates from OCR output with CORD `
 
 ```bash
 python3 scripts/evaluate_total_amount.py --dataset cord \
-  --predictions runs/cord-paddleocr.jsonl --labels data/cord-v2/labels.jsonl \
+  --predictions runs/cord-paddleocr.jsonl --labels "$DATASETS_ROOT/source/cord-v2/labels.jsonl" \
   --split test --train-predictions runs/cord-paddleocr.jsonl \
-  --train-labels data/cord-v2/labels.jsonl --train-split validation \
+  --train-labels "$DATASETS_ROOT/source/cord-v2/labels.jsonl" --train-split validation \
   --ranker-output runs/total-amount/cord-paddle-ranker.json \
   --output runs/total-amount/cord-paddle-test.json
 
 python3 scripts/evaluate_total_amount.py --dataset sroie \
   --predictions runs/sroie-paddleocr-100.jsonl \
   --train-predictions runs/cord-paddleocr.jsonl \
-  --train-labels data/cord-v2/labels.jsonl --train-root data/cord-v2 \
+  --train-labels "$DATASETS_ROOT/source/cord-v2/labels.jsonl" --train-root "$DATASETS_ROOT/source/cord-v2" \
   --train-dataset cord --train-split validation \
   --output runs/total-amount/sroie-paddle-trained-on-cord.json
 ```
@@ -94,6 +104,18 @@ python3 scripts/evaluate_total_amount.py --dataset sroie \
 Current development results: keyword-nearby total selection is 75.8% PaddleOCR / 77.9% RapidOCR on CORD test; the CORD-trained ranker reaches 82.1% / 85.3%. On the first 99 labeled SROIE receipts, the CORD-trained ranker transfers at 68.7% / 72.7%, versus the keyword baseline at 61.6% / 63.6%. The correct numeric value appears somewhere in the OCR candidates for 99/99 SROIE records (oracle upper bound), so most current misses are candidate selection rather than raw amount reading. See [`reports/Total amount extraction results.md`](reports/Total%20amount%20extraction%20results.md) for method definitions and full results.
 
 Amount matching deliberately does not use ASCII-folding. CORD is compared by digits-only signatures (its Indonesian punctuation conventions vary); SROIE amounts are parsed into integer cents. For Czech documents, add a Czech/EU locale-aware parser before relying on totals: comma decimals and thousands separators must retain monetary meaning.
+
+Receipt-level categorization uses one schema in naive and tuned modes: total/currency, purpose category and merchant evidence, tax, tip, service charge, plus a not-yet-extracted line-item collection with a future `assigned_person_id` slot. Tuned mode uses the CORD-trained total candidate ranker; currency/purpose/tax/tip are currently shared rule-based extensions in both modes. Results and ground-truth limitations are in [`reports/Receipt field categorization results.md`](reports/Receipt%20field%20categorization%20results.md).
+
+Manual field annotations are evaluated separately from the original OCR/KIE labels. See [`reports/Manual receipt baseline evaluation.md`](reports/Manual%20receipt%20baseline%20evaluation.md) for held-out CORD and full SROIE PaddleOCR baseline results, including coverage and per-document artifacts.
+
+```bash
+python3 scripts/evaluate_receipt_fields.py --dataset cord --mode naive \
+  --predictions runs/cord-paddleocr.jsonl --split test --output runs/receipt-fields/cord-naive.jsonl
+python3 scripts/evaluate_receipt_fields.py --dataset cord --mode tuned \
+  --predictions runs/cord-paddleocr.jsonl --split test \
+  --ranker runs/total-amount/cord-paddle-ranker.json --output runs/receipt-fields/cord-tuned.jsonl
+```
 
 ### Optional local LLM selector
 

@@ -4,10 +4,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 import zipfile
 from pathlib import Path, PurePosixPath
 
 import requests
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from ocr_lab.data_paths import source_dataset
 
 LANGUAGES = ("de", "es", "fr", "it", "ja", "pt", "zh")
 RELEASE = "https://github.com/doc-analysis/XFUND/releases/download/v1.0"
@@ -22,7 +26,7 @@ def safe_destination(name: str, root: Path) -> Path | None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--dest", type=Path, default=Path("data/xfund-val"))
+    parser.add_argument("--dest", type=Path, default=source_dataset("xfund-val"))
     args = parser.parse_args()
     args.dest.mkdir(parents=True, exist_ok=True)
     session = requests.Session()

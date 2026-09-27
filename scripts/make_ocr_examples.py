@@ -11,6 +11,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from ocr_lab.evaluate import ascii_fold
+from ocr_lab.data_paths import source_dataset
 
 
 def load_results(path: Path) -> dict[tuple[str, int], dict[str, Any]]:
@@ -88,7 +89,7 @@ def main() -> int:
     parser.add_argument("--paddle", type=Path, default=Path("runs/cord-paddleocr.jsonl"))
     parser.add_argument("--rapid", type=Path, default=Path("runs/cord-rapidocr-no-orientation.jsonl"))
     parser.add_argument("--output", type=Path, default=Path("reports/OCR example comparisons.md"))
-    parser.add_argument("--dataset-root", type=Path, default=Path("data/cord-v2"))
+    parser.add_argument("--dataset-root", type=Path, default=source_dataset("cord-v2"))
     parser.add_argument("--dataset-name", default="CORD")
     args = parser.parse_args()
     paddle = load_results(args.paddle)

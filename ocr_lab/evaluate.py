@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from .core import LocalOCRHarness, OCRConfig, config_dict, installed_versions
+from .data_paths import source_dataset
 
 
 def flatten_cord_text(ground_truth: str) -> tuple[str, list[tuple[float, float, str]]]:
@@ -97,11 +98,13 @@ def edit_distance(left: str, right: str) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--labels", type=Path, default=Path("data/cord-v2/labels.jsonl"))
+    parser.add_argument("--labels", type=Path, default=source_dataset("cord-v2") / "labels.jsonl")
     parser.add_argument("--harness", choices=("paddleocr", "rapidocr"), default=None)
     parser.add_argument("--config", type=Path)
     parser.add_argument("--output", type=Path, default=Path("runs/cord-predictions.jsonl"))
     parser.add_argument("--limit", type=int)
+    parser.add_argument("--offset", type=int, default=0, help="Skip this many manifest rows, useful for restarting a long run")
+    parser.add_argument("--append", action="store_true", help="Append output rows when resuming an interrupted run")
     parser.add_argument("--warmup", type=int, default=1)
     parser.add_argument("--resolution", choices=("lr", "hr"), help="Optional TextZoom subset filter")
     parser.add_argument("--normalization", choices=("ascii-fold", "case-insensitive", "case-sensitive"), default="ascii-fold", help="Scoring normalization; default ignores case, punctuation, symbols, and decomposable diacritics")
@@ -111,8 +114,14 @@ def main() -> int:
         config.harness = args.harness
     harness = LocalOCRHarness(config)
     rows = [json.loads(line) for line in args.labels.read_text(encoding="utf-8").splitlines() if line.strip()]
+    if args.offset < 0:
+        parser.error("--offset must be nonnegative")
+    if args.append and not args.output.exists():
+        parser.error("--append requires an existing output file")
     if args.resolution:
         rows = [row for row in rows if row.get("resolution") == args.resolution]
+    if args.offset:
+        rows = rows[args.offset:]
     if args.limit:
         rows = rows[:args.limit]
     if not rows:
@@ -127,7 +136,7 @@ def main() -> int:
     insensitive_char_errors = insensitive_word_errors = insensitive_chars_total = insensitive_words_total = 0
     ascii_char_errors = ascii_word_errors = ascii_chars_total = ascii_words_total = 0
     latencies: list[float] = []
-    with args.output.open("w", encoding="utf-8") as out:
+    with args.output.open("a" if args.append else "w", encoding="utf-8") as out:
         for row in rows:
             image_path = args.labels.parent / row["image"]
             started = time.perf_counter()

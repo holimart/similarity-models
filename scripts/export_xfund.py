@@ -4,13 +4,17 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Any
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from ocr_lab.data_paths import source_dataset
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--root", type=Path, default=Path("data/xfund-val"))
+    parser.add_argument("--root", type=Path, default=source_dataset("xfund-val"))
     args = parser.parse_args()
     records: list[dict[str, Any]] = []
     for language in ("de", "es", "fr", "it", "ja", "pt", "zh"):

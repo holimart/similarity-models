@@ -15,9 +15,12 @@ from typing import Any
 
 import requests
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from ocr_lab.data_paths import source_dataset
+
 DATASET = "naver-clova-ix/cord-v2"
 ROWS_API = "https://datasets-server.huggingface.co/rows"
-DEFAULT_DEST = Path("data/cord-v2")
+DEFAULT_DEST = source_dataset("cord-v2")
 
 
 def fetch_rows(split: str, limit: int | None) -> list[dict[str, Any]]:
