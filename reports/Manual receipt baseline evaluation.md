@@ -1,6 +1,6 @@
 # Manual receipt-label baseline evaluation
 
-The receipt-field extractors were evaluated against the manually reviewed manifest at `$DATASETS_ROOT/manual/receipt_annotations/receipt_field_annotations.jsonl`. OCR prediction coverage is **100 held-out CORD test receipts** and **all 626 SROIE receipts**. The 100 CORD validation receipts are excluded from the total comparison because they were used to train the ranker. That gives 726 evaluated receipts from the 826-row manual manifest. TextZoom and XFUND are non-receipt corpora and are out of scope.
+The receipt-field extractors were evaluated against the manually reviewed manifest at `annotations/manual/receipt_field_annotations.jsonl` (versioned in this repository; the batch shards are alongside it). OCR prediction coverage is **100 held-out CORD test receipts** and **all 626 SROIE receipts**. The 100 CORD validation receipts are excluded from the total comparison because they were used to train the ranker. That gives 726 evaluated receipts from the 826-row manual manifest. TextZoom and XFUND are non-receipt corpora and are out of scope.
 
 The tuned selector uses the existing CORD-trained amount ranker. CORD test remains held out from ranker training; the same ranker is transferred to SROIE. Bottommost/largest baselines and keyword-nearby are scored on the same saved PaddleOCR detections. Results are exact normalized amount matches; selection coverage is reported separately.
 

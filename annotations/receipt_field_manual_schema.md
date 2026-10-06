@@ -1,6 +1,6 @@
 # Manual receipt-field annotation schema
 
-These annotations are an additive local layer. Never overwrite CORD/SROIE source labels. Preserve receipt strings exactly as shown; keep uncertain or missing values explicit rather than guessing. These files may contain financial/merchant information and remain under `$DATASETS_ROOT/manual/receipt_annotations/`, outside version control.
+These annotations are an additive local layer. Never overwrite CORD/SROIE source labels. Preserve receipt strings exactly as shown; keep uncertain or missing values explicit rather than guessing. The merged manifest and batch shards are versioned in this repository under `annotations/manual/` as derived labels that reference source image paths; the underlying images are never committed. `ocr_lab.data_paths.manual_annotations_dir()` prefers a `$DATASETS_ROOT/manual/receipt_annotations/` copy when present and otherwise falls back to `annotations/manual/`.
 
 One JSON object per receipt:
 

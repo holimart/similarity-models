@@ -1,0 +1,34 @@
+{
+  "feature_names": [
+    "bias",
+    "near_total_anchor",
+    "anchor_distance",
+    "vertical_position",
+    "line_has_total",
+    "digit_length",
+    "log_amount",
+    "ocr_confidence",
+    "has_separator",
+    "excluded_context"
+  ],
+  "weights": [
+    -1.2540920351725608,
+    3.6728509296989165,
+    -0.05221801336922924,
+    0.032407174200085945,
+    0.0,
+    0.29041010010476187,
+    0.5887674099908526,
+    -1.0263673315685509,
+    0.8500708753948236,
+    -0.7017936101080393
+  ],
+  "training": {
+    "documents_used": 80,
+    "documents_without_positive_candidate": 5,
+    "labeled_candidates": 583
+  },
+  "training_dataset": "cord",
+  "training_split": "validation",
+  "score_normalization": "dataset-specific amount normalization; not OCR ASCII-fold"
+}

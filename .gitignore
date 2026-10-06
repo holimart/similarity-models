@@ -8,4 +8,12 @@ __pycache__/
 venv/
 .env
 data/
-runs/
+
+# Raw OCR transcripts and result ledgers stay local; regenerate them from the
+# downloaders/manifest. Track only the tiny trained candidate-ranker artifacts.
+runs/*
+!runs/total-amount/
+runs/total-amount/*
+!runs/total-amount/*-ranker.json
+
+# Derived manual annotation shards are versioned under annotations/manual/.

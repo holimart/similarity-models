@@ -19,8 +19,11 @@ import requests
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from ocr_lab.data_paths import source_dataset
 
-ARCHIVE_URL = "https://codeload.github.com/zzzDavid/ICDAR-2019-SROIE/zip/refs/heads/master"
 SOURCE_URL = "https://github.com/zzzDavid/ICDAR-2019-SROIE"
+# Pin the mirror commit (resolved from refs/heads/master) for reproducibility.
+COMMIT = "27be4271b251c256f695acbade9a801bffe85994"
+ARCHIVE_URL = f"https://codeload.github.com/zzzDavid/ICDAR-2019-SROIE/zip/{COMMIT}"
+EXPECTED_PREFIX = f"ICDAR-2019-SROIE-{COMMIT}/data/"
 
 
 def main() -> int:
@@ -38,9 +41,8 @@ def main() -> int:
     ]
     if not selected:
         raise RuntimeError("The source archive did not contain the expected data/img, data/box, data/key files")
-    expected_prefix = "ICDAR-2019-SROIE-master/data/"
     for item in selected:
-        relative = PurePosixPath(item.filename).relative_to(expected_prefix)
+        relative = PurePosixPath(item.filename).relative_to(EXPECTED_PREFIX)
         destination = args.dest / Path(relative.as_posix())
         destination.parent.mkdir(parents=True, exist_ok=True)
         with archive.open(item) as src, destination.open("wb") as dst:

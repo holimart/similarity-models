@@ -19,6 +19,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from ocr_lab.data_paths import source_dataset
 
 DATASET = "naver-clova-ix/cord-v2"
+# Pinned dataset revision so a re-download is reproducible. This is the
+# `sha` reported by https://huggingface.co/api/datasets/naver-clova-ix/cord-v2.
+REVISION = "7f0115a4b758a71d6473b8d085751692da2fef98"
 ROWS_API = "https://datasets-server.huggingface.co/rows"
 DEFAULT_DEST = source_dataset("cord-v2")
 
@@ -31,7 +34,14 @@ def fetch_rows(split: str, limit: int | None) -> list[dict[str, Any]]:
         length = min(100, limit - len(rows)) if limit is not None else 100
         response = session.get(
             ROWS_API,
-            params={"dataset": DATASET, "config": "default", "split": split, "offset": offset, "length": length},
+            params={
+                "dataset": DATASET,
+                "config": "default",
+                "split": split,
+                "offset": offset,
+                "length": length,
+                "revision": REVISION,
+            },
             timeout=90,
         )
         response.raise_for_status()

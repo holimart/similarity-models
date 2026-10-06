@@ -54,8 +54,13 @@ def derived_dataset(name: str) -> Path:
 
 
 def manual_annotations_dir() -> Path:
-    """Resolve the local manual annotation directory."""
+    """Resolve the manual annotation directory.
+
+    The merged manifest and batch shards are versioned in the repository under
+    ``annotations/manual/``. If the shared workspace already holds a manual
+    annotation copy, keep using that for backwards compatibility.
+    """
     manual = datasets_root() / "manual" / "receipt_annotations"
-    if manual.exists() or datasets_root() != REPO_ROOT / "data":
+    if manual.exists():
         return manual
-    return REPO_ROOT / "data" / "manual_receipt_annotations"
+    return REPO_ROOT / "annotations" / "manual"

@@ -14,7 +14,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from ocr_lab.data_paths import source_dataset
 
 LANGUAGES = ("de", "es", "fr", "it", "ja", "pt", "zh")
-RELEASE = "https://github.com/doc-analysis/XFUND/releases/download/v1.0"
+# Official release tag (immutable by convention). Verify the tag and file
+# checksums when a reproducible re-download matters.
+TAG = "v1.0"
+RELEASE = f"https://github.com/doc-analysis/XFUND/releases/download/{TAG}"
 
 
 def safe_destination(name: str, root: Path) -> Path | None:
