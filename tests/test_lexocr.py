@@ -78,9 +78,13 @@ def test_image_only_pdf_triggers_ocr(monkeypatch):
     ocr_text = _GOOD_TEXT
     seen = {"calls": 0}
 
-    def fake_ocr(image_bytes, device="cpu"):
+    def fake_ocr(image, device="cpu"):
         seen["calls"] += 1
-        assert image_bytes[:4] == b"\x89PNG"
+        # Rendered pages are passed as HxWx3 BGR numpy arrays (no PNG round-trip).
+        import numpy as np
+
+        assert isinstance(image, np.ndarray)
+        assert image.ndim == 3 and image.shape[2] == 3
         return ocr_text
 
     monkeypatch.setattr(engine, "ocr_available", lambda: True)
@@ -149,3 +153,73 @@ def test_run_batch_writes_jsonl(tmp_path, monkeypatch):
     lines = [json.loads(line) for line in out.read_text().splitlines() if line.strip()]
     assert [ln["source_id"] for ln in lines] == ["aaa", "bbb"]
     assert all(ln["readable"] for ln in lines)
+
+
+# --- render helpers / concurrency defaults ---------------------------------
+
+
+def test_page_to_numpy_is_bgr():
+    import numpy as np
+    import pymupdf
+    from lexocr.engine import _page_to_numpy
+
+    doc = pymupdf.open()
+    page = doc.new_page()
+    page.draw_rect(pymupdf.Rect(72, 72, 200, 200))
+    arr = _page_to_numpy(page, dpi=72)
+    doc.close()
+
+    assert isinstance(arr, np.ndarray)
+    assert arr.ndim == 3 and arr.shape[2] == 3
+    assert arr.dtype == np.uint8
+    assert arr.flags["C_CONTIGUOUS"]
+
+
+def test_default_workers_gpu_vs_cpu():
+    from lexocr.batch import _default_workers
+
+    assert _default_workers("cuda") >= 2
+    assert _default_workers("cuda:1") >= 2
+    assert _default_workers("cpu") >= 1
+
+
+def test_gpu_pipeline_assembles_records(tmp_path, monkeypatch):
+    """The GPU page pipeline (render/OCR threads) assembles per-doc records."""
+    import json
+
+    import pymupdf
+
+    class _Result:
+        def __init__(self, texts):
+            self.txts = texts
+
+    class _FakeEngine:
+        def __call__(self, image):
+            assert image is not None
+            return _Result(["Nejvyssi soud rozhodl o dovolani ve veci " * 8])
+
+    monkeypatch.setattr(engine, "get_engine", lambda device="cpu": _FakeEngine())
+
+    batch_dir = tmp_path / "pdfs"
+    batch_dir.mkdir()
+    for sid in ("doc-a", "doc-b"):
+        doc = pymupdf.open()
+        for _ in range(3):
+            page = doc.new_page()
+            page.draw_rect(pymupdf.Rect(72, 72, 200, 200))  # image-only
+        (batch_dir / f"{sid}.pdf").write_bytes(doc.tobytes())
+        doc.close()
+
+    out = tmp_path / "gpu.jsonl"
+    stats = run_batch(batch_dir, out, device="cuda", workers=4)
+
+    assert stats["documents"] == 2
+    assert stats["readable"] == 2
+    assert stats["ocr_pages"] == 6
+
+    recs = {json.loads(ln)["source_id"]: json.loads(ln) for ln in out.read_text().splitlines()}
+    assert set(recs) == {"doc-a", "doc-b"}
+    for rec in recs.values():
+        assert rec["pages"] == 3
+        assert rec["used_ocr"] is True
+        assert "Nejvyssi soud" in rec["text"]

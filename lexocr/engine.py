@@ -18,7 +18,9 @@ and image-only PDFs are reported as unavailable (``skip``) rather than crashing.
 from __future__ import annotations
 
 import os
+import queue
 import re
+import threading
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -178,10 +180,13 @@ def get_engine(device: str = "cpu") -> Any:
     return _ENGINES[key]
 
 
-def _ocr_image(image_bytes: bytes, device: str = "cpu") -> str:
-    """Recognize one rendered page; return its text (lines joined)."""
+def _ocr_image(image: Any, device: str = "cpu") -> str:
+    """Recognize one rendered page; return its text (lines joined).
+
+    ``image`` may be a PNG/JPEG byte string or an HxWx3 BGR ``numpy`` array.
+    """
     engine = get_engine(device)
-    result = engine(image_bytes)
+    result = engine(image)
     texts = getattr(result, "txts", None) or []
     return "\n".join(t for t in texts if t and t.strip())
 
@@ -228,22 +233,68 @@ def _text_layer(doc) -> str:
     return "\n\n".join(parts)
 
 
+def _page_to_numpy(page, dpi: int):
+    """Render one page to a contiguous HxWx3 BGR ``numpy`` array.
+
+    Skips PNG encoding entirely (RapidOCR accepts a BGR array): on full-page
+    JPEG-2000 scans the PNG encode/decode round-trip costs more than the raster.
+    """
+    import numpy as np
+
+    pix = page.get_pixmap(dpi=dpi)
+    arr = np.frombuffer(pix.samples, dtype=np.uint8)
+    if pix.n == 3:
+        arr = arr.reshape(pix.height, pix.width, 3)
+    elif pix.n == 4:
+        arr = arr.reshape(pix.height, pix.width, 4)[:, :, :3]
+    else:  # grayscale -> replicate to 3 channels
+        arr = arr.reshape(pix.height, pix.width, 1).repeat(3, axis=2)
+    return np.ascontiguousarray(arr)
+
+
 def _ocr_pages(doc, dpi: int, device: str = "cpu") -> tuple[str, int]:
+    """OCR every page, rendering ahead on a background thread.
+
+    Rendering (JPEG-2000 decode + scale) is CPU work that is otherwise idle
+    while the GPU runs OCR. A small prefetch queue overlaps the two, hiding the
+    render entirely behind inference.
+    """
+    pages = list(doc)
+    if not pages:
+        return "", 0
+
+    prefetch = int(os.environ.get("OCR_PREFETCH", "4") or "4")
+    q: queue.Queue[Any] = queue.Queue(maxsize=max(1, prefetch))
+    _SENTINEL = object()
+
+    # Only this thread touches the document; the consumer only sees arrays.
+    def _producer() -> None:
+        for page in pages:
+            try:
+                q.put(_page_to_numpy(page, dpi))
+            except Exception:
+                q.put(None)
+        q.put(_SENTINEL)
+
+    thread = threading.Thread(target=_producer, name="lexocr-render", daemon=True)
+    thread.start()
+
     parts: list[str] = []
     ocr_pages = 0
-    for page in doc:
-        try:
-            pix = page.get_pixmap(dpi=dpi)
-            image_bytes = pix.tobytes("png")
-        except Exception:
+    while True:
+        item = q.get()
+        if item is _SENTINEL:
+            break
+        if item is None:
             continue
         try:
-            text = _ocr_image(image_bytes, device)
+            text = _ocr_image(item, device)
         except Exception:
             text = ""
         if text.strip():
             parts.append(text.strip())
             ocr_pages += 1
+    thread.join()
     return "\n\n".join(parts), ocr_pages
 
 

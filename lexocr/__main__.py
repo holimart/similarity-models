@@ -1,8 +1,8 @@
 """CLI entry point for ``python -m lexocr``.
 
-    python -m lexocr batch --batch-dir DIR --output FILE [--device cpu|cuda]
-                           [--workers N] [--dpi 200] [--max-seconds S] [--min-chars 200]
-    python -m lexocr probe
+python -m lexocr batch --batch-dir DIR --output FILE [--device cpu|cuda]
+                       [--workers N] [--dpi 200] [--max-seconds S] [--min-chars 200]
+python -m lexocr probe
 """
 
 from __future__ import annotations
@@ -56,7 +56,12 @@ def build_parser() -> argparse.ArgumentParser:
     batch.add_argument("--batch-dir", required=True, help="directory containing *.pdf files")
     batch.add_argument("--output", required=True, help="output JSONL path")
     batch.add_argument("--device", default="cpu", help="cpu or cuda[:N] (default: cpu)")
-    batch.add_argument("--workers", type=int, default=1, help="process pool size (CPU only)")
+    batch.add_argument(
+        "--workers",
+        type=int,
+        default=0,
+        help="concurrent consumers (0 = auto: 8 on GPU, CPU count on CPU)",
+    )
     batch.add_argument("--dpi", type=int, default=200, help="render DPI hint (default: 200)")
     batch.add_argument(
         "--max-seconds", type=int, default=0, help="stop early after N seconds (0 = no limit)"
