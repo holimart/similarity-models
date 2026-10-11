@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -223,3 +224,107 @@ def test_gpu_pipeline_assembles_records(tmp_path, monkeypatch):
         assert rec["pages"] == 3
         assert rec["used_ocr"] is True
         assert "Nejvyssi soud" in rec["text"]
+
+
+# --- hard deadline ---------------------------------------------------------
+
+
+def test_run_batch_cpu_deadline_is_hard(tmp_path, monkeypatch):
+    """``max_seconds`` must stop the CPU run, not drain every queued doc."""
+    batch_dir = tmp_path / "pdfs"
+    batch_dir.mkdir()
+    n_docs = 20
+    for d in range(n_docs):
+        (batch_dir / f"doc{d:03d}.pdf").write_bytes(_make_pdf(""))
+
+    def slow_ocr(image, device="cpu"):
+        time.sleep(0.2)
+        return _GOOD_TEXT
+
+    monkeypatch.setattr(engine, "ocr_available", lambda: True)
+    monkeypatch.setattr(engine, "_ocr_image", slow_ocr)
+
+    out = tmp_path / "cpu.jsonl"
+    start = time.monotonic()
+    stats = run_batch(batch_dir, out, device="cpu", workers=1, max_seconds=1)
+    elapsed = time.monotonic() - start
+
+    assert elapsed < 5.0
+    # Only fully completed documents were emitted; the rest were dropped.
+    assert 0 < stats["documents"] < n_docs
+
+    import json
+
+    lines = [json.loads(line) for line in out.read_text().splitlines() if line.strip()]
+    assert len(lines) == stats["documents"]
+    assert all(ln["pages"] == 1 and ln["used_ocr"] for ln in lines)
+
+
+def test_run_batch_cpu_pool_deadline_is_hard(tmp_path, monkeypatch):
+    """The ProcessPoolExecutor path also stops at the deadline (no drain)."""
+    import json
+
+    batch_dir = tmp_path / "pool"
+    batch_dir.mkdir()
+    n_docs = 40
+    for d in range(n_docs):
+        (batch_dir / f"p{d:03d}.pdf").write_bytes(_make_pdf(""))
+
+    def slow_ocr(image, device="cpu"):
+        time.sleep(0.2)
+        return _GOOD_TEXT
+
+    monkeypatch.setattr(engine, "ocr_available", lambda: True)
+    monkeypatch.setattr(engine, "_ocr_image", slow_ocr)
+
+    out = tmp_path / "pool.jsonl"
+    start = time.monotonic()
+    stats = run_batch(batch_dir, out, device="cpu", workers=2, max_seconds=1)
+    elapsed = time.monotonic() - start
+
+    assert elapsed < 5.0
+    assert 0 < stats["documents"] < n_docs
+    lines = [json.loads(line) for line in out.read_text().splitlines() if line.strip()]
+    assert len(lines) == stats["documents"]
+
+
+def test_run_gpu_deadline_is_hard(tmp_path, monkeypatch):
+    """``_run_gpu`` returns promptly past the deadline and drops partial docs."""
+    from lexocr.batch import _run_gpu
+
+    class _Result:
+        def __init__(self, texts):
+            self.txts = texts
+
+    class _SlowEngine:
+        def __call__(self, image):
+            time.sleep(0.3)
+            return _Result(["Nejvyssi soud rozhodl o dovolani ve veci " * 8])
+
+    monkeypatch.setattr(engine, "get_engine", lambda device="cpu": _SlowEngine())
+
+    import pymupdf
+
+    batch_dir = tmp_path / "gpu-deadline"
+    batch_dir.mkdir()
+    n_docs = 20
+    pages = 4
+    for d in range(n_docs):
+        doc = pymupdf.open()
+        for _ in range(pages):
+            page = doc.new_page()
+            page.draw_rect(pymupdf.Rect(72, 72, 200, 200))  # image-only
+        (batch_dir / f"doc{d:03d}.pdf").write_bytes(doc.tobytes())
+        doc.close()
+
+    pdfs = sorted(batch_dir.glob("*.pdf"))
+    emitted = []
+    start = time.monotonic()
+    _run_gpu(pdfs, "cuda", 200, start + 1.0, 200, 4, lambda lines: emitted.extend(lines))
+    elapsed = time.monotonic() - start
+
+    assert elapsed < 5.0
+    assert 0 < len(emitted) < n_docs
+    # Only whole documents are emitted (all pages OCR'd).
+    assert all(rec["pages"] == pages for rec in emitted)
+    assert all(rec["used_ocr"] is True for rec in emitted)

@@ -93,6 +93,25 @@ def _record(
     }
 
 
+def _put_or_deadline(q: queue.Queue[Any], item: Any, deadline: float | None) -> bool:
+    """Enqueue ``item``, dropping it if ``deadline`` passes first.
+
+    Returns ``True`` if the item was queued. With no deadline this is a plain
+    blocking ``put`` (normal backpressure); with a deadline it polls in short
+    slices so a blocked producer can bail out instead of hanging forever.
+    """
+    if deadline is None:
+        q.put(item)
+        return True
+    while True:
+        try:
+            q.put(item, timeout=0.1)
+            return True
+        except queue.Full:
+            if time.monotonic() >= deadline:
+                return False
+
+
 def _run_gpu(
     pdfs: list[Path],
     device: str,
@@ -156,14 +175,16 @@ def _run_gpu(
     def render() -> None:
         handles: dict[str, Any] = {}
         while True:
+            # Hard stop: once the deadline passes, stop producing entirely
+            # (rather than skipping every remaining task in a busy loop).
+            if deadline is not None and time.monotonic() >= deadline:
+                return
             with index_lock:
                 i = index["i"]
                 if i >= len(tasks):
                     return
                 index["i"] = i + 1
             stem, path, pi = tasks[i]
-            if deadline is not None and time.monotonic() >= deadline:
-                continue
             doc = handles.get(path)
             if doc is None:
                 try:
@@ -177,12 +198,24 @@ def _run_gpu(
                     arr = _page_to_numpy(doc[pi], dpi)
                 except Exception:
                     arr = None
-            q.put((stem, pi, arr))
+            # If the queue is full and the deadline hits, drop the page and exit.
+            if not _put_or_deadline(q, (stem, pi, arr), deadline):
+                return
 
     def consume() -> None:
         while True:
-            item = q.get()
+            try:
+                item = q.get(timeout=0.1)
+            except queue.Empty:
+                if deadline is not None and time.monotonic() >= deadline:
+                    return
+                continue
             if item is sentinel:
+                return
+            # Hard stop: do not begin new OCR work past the deadline. Docs that
+            # already completed were emitted; incomplete docs are dropped and
+            # re-selected on the next run.
+            if deadline is not None and time.monotonic() >= deadline:
                 return
             stem, pi, arr = item
             try:
@@ -209,7 +242,11 @@ def _run_gpu(
         t.start()
     for t in renderers:
         t.join()
+    # Unblock consumers (they also self-terminate on their get() timeout once the
+    # deadline passes, so no deadlock if renderers stopped early).
     for _ in consumers:
+        if deadline is not None and time.monotonic() >= deadline:
+            break
         q.put(sentinel)
     for t in consumers:
         t.join()
@@ -272,17 +309,21 @@ def run_batch(
         elif workers > 1 and pdfs:
             import concurrent.futures
 
-            with concurrent.futures.ProcessPoolExecutor(max_workers=workers) as pool:
+            pool = concurrent.futures.ProcessPoolExecutor(max_workers=workers)
+            try:
                 futures = {pool.submit(_process_one, str(p), device, min_chars): p for p in pdfs}
                 for future in concurrent.futures.as_completed(futures):
+                    # Hard stop: stop emitting once past the deadline. Queued (not
+                    # yet running) docs are cancelled on shutdown below; only the
+                    # in-flight workers finish -- the rest are left for next run.
                     if deadline is not None and time.monotonic() >= deadline:
-                        for f in futures:
-                            f.cancel()
                         break
                     try:
                         _emit([future.result()])
                     except Exception:  # pragma: no cover - defensive
                         _emit([_process_one(str(futures[future]), device, min_chars)])
+            finally:
+                pool.shutdown(wait=True, cancel_futures=True)
         else:
             for pdf in pdfs:
                 if deadline is not None and time.monotonic() >= deadline:
