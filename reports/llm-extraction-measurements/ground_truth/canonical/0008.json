@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "prompt_version": "receipt-extraction-v1",
+  "source": {
+    "id": "8",
+    "image": "cord-v2/images/validation/0008.jpg",
+    "image_sha256": "11334258ae1ff6c27d0bd5bd1c89c6d282a8ccfad9076aeb96e33217564b62e3",
+    "split": "validation",
+    "model": "deepseek/deepseek-v4.1-flash",
+    "input_mode": "both",
+    "provider": "OpenInference",
+    "created_at": "2026-10-22T06:40:00+00:00"
+  },
+  "usage": {
+    "prompt_tokens": 1259,
+    "completion_tokens": 507,
+    "total_tokens": 1766,
+    "reasoning_tokens": 0,
+    "cached_tokens": 0,
+    "image_tokens": 0,
+    "cost_usd": 0.00034163,
+    "list_cost_usd": 0.0009861
+  },
+  "cost_usd": 0.00034163,
+  "extraction": {
+    "document_type": "receipt",
+    "document": {
+      "number": null,
+      "date": null,
+      "time": null,
+      "due_date": null,
+      "payment_terms": null,
+      "currency": "IDR",
+      "country": "ID",
+      "language": "id"
+    },
+    "merchant": {
+      "name": "D'Cost",
+      "legal_name": null,
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "tax_ids": [],
+      "store_id": null,
+      "cashier": null,
+      "table": null
+    },
+    "customer": {
+      "name": null,
+      "address": null,
+      "tax_id": null,
+      "account_id": null
+    },
+    "amounts": {
+      "subtotal": 11700,
+      "discount_total": null,
+      "tax_total": null,
+      "tip": null,
+      "service_charge": null,
+      "delivery_fee": null,
+      "shipping": null,
+      "rounding": null,
+      "total": 11700,
+      "amount_paid": 20000,
+      "change": 8300,
+      "amount_due": null,
+      "prior_balance": null,
+      "taxes": []
+    },
+    "payment": {
+      "method": "cash",
+      "card_brand": null,
+      "card_last4": null,
+      "transaction_id": null,
+      "auth_code": null
+    },
+    "line_items": [
+      {
+        "description": "TALAM UNGU",
+        "sku": null,
+        "quantity": 3,
+        "unit": null,
+        "unit_price": null,
+        "gross_amount": 19500,
+        "discount": null,
+        "net_amount": null,
+        "tax_rate_percent": null,
+        "category": null,
+        "notes": null
+      },
+      {
+        "description": "DISC ITEM",
+        "sku": null,
+        "quantity": null,
+        "unit": null,
+        "unit_price": null,
+        "gross_amount": null,
+        "discount": 7800,
+        "net_amount": null,
+        "tax_rate_percent": null,
+        "notes": null
+      },
+      {
+        "description": "MIKA KECIL",
+        "sku": null,
+        "quantity": null,
+        "unit": null,
+        "unit_price": null,
+        "gross_amount": 0,
+        "discount": null,
+        "net_amount": null,
+        "tax_rate_percent": null,
+        "notes": null
+      }
+    ],
+    "classification": {
+      "category": "food_dining",
+      "subcategory": null,
+      "purpose_summary": null,
+      "is_business_expense": null,
+      "tags": []
+    },
+    "quality": {
+      "legibility": "low",
+      "handwritten": null,
+      "blur": true,
+      "glare": null,
+      "cropped": false,
+      "arithmetic_ok": true,
+      "duplicate_suspected": null,
+      "confidence": 0.35,
+      "warnings": [
+        "OCR transcript is garbled and partially unreadable",
+        "Merchant name and item details inferred from visible text; some values uncertain"
+      ]
+    }
+  }
+}

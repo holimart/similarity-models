@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "prompt_version": "receipt-extraction-v1",
+  "source": {
+    "id": "3",
+    "image": "cord-v2/images/validation/0003.jpg",
+    "image_sha256": "2355986e596a5bfc8709d682d458e0893ea9f43d891429b656981cfb6435ee87",
+    "split": "validation",
+    "model": "deepseek/deepseek-v4.1-flash",
+    "input_mode": "both",
+    "provider": "OpenInference",
+    "created_at": "2026-10-22T06:29:26+00:00"
+  },
+  "usage": {
+    "prompt_tokens": 1235,
+    "completion_tokens": 603,
+    "total_tokens": 1838,
+    "reasoning_tokens": 0,
+    "cached_tokens": 0,
+    "image_tokens": 0,
+    "cost_usd": 0.00038795,
+    "list_cost_usd": 0.0010941
+  },
+  "cost_usd": 0.00038795,
+  "extraction": {
+    "document_type": "receipt",
+    "document": {
+      "number": null,
+      "date": null,
+      "time": null,
+      "due_date": null,
+      "payment_terms": null,
+      "currency": "IDR",
+      "country": "ID",
+      "language": "id"
+    },
+    "merchant": {
+      "name": null,
+      "legal_name": null,
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "tax_ids": [],
+      "store_id": null,
+      "cashier": null,
+      "table": null
+    },
+    "customer": {
+      "name": null,
+      "address": null,
+      "tax_id": null,
+      "account_id": null
+    },
+    "amounts": {
+      "subtotal": 28000,
+      "discount_total": null,
+      "tax_total": null,
+      "tip": null,
+      "service_charge": null,
+      "delivery_fee": null,
+      "shipping": null,
+      "rounding": null,
+      "total": 28000,
+      "amount_paid": 28000,
+      "change": 0,
+      "amount_due": null,
+      "prior_balance": null,
+      "taxes": []
+    },
+    "payment": {
+      "method": "cash",
+      "card_brand": null,
+      "card_last4": null,
+      "transaction_id": null,
+      "auth_code": null
+    },
+    "line_items": [
+      {
+        "description": "M-Caramel Black Tea",
+        "sku": null,
+        "quantity": 1,
+        "unit": null,
+        "unit_price": 28000,
+        "gross_amount": 28000,
+        "discount": null,
+        "net_amount": 28000,
+        "tax_rate_percent": 0,
+        "category": "food_dining",
+        "notes": "Less Ice"
+      }
+    ],
+    "classification": {
+      "category": "food_dining",
+      "subcategory": "beverages",
+      "purpose_summary": "Purchased a caramel black tea beverage",
+      "is_business_expense": null,
+      "tags": []
+    },
+    "quality": {
+      "legibility": "medium",
+      "handwritten": false,
+      "blur": true,
+      "glare": false,
+      "cropped": false,
+      "arithmetic_ok": true,
+      "duplicate_suspected": false,
+      "confidence": 0.75,
+      "warnings": [
+        "Merchant name and date are not visible in the image",
+        "Currency inferred from locale and amount format"
+      ]
+    }
+  }
+}

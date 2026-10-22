@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "prompt_version": "receipt-extraction-v1",
+  "source": {
+    "id": "11",
+    "image": "cord-v2/images/validation/0011.jpg",
+    "image_sha256": "3e398b0f0e78a77f0d52a782f4ce979806eaf3d87ab7593ee5441832309c3179",
+    "split": "validation",
+    "model": "deepseek/deepseek-v4.1-flash",
+    "input_mode": "both",
+    "provider": "OpenInference",
+    "created_at": "2026-10-22T06:46:52+00:00"
+  },
+  "usage": {
+    "prompt_tokens": 1272,
+    "completion_tokens": 936,
+    "total_tokens": 2208,
+    "reasoning_tokens": 0,
+    "cached_tokens": 0,
+    "image_tokens": 0,
+    "cost_usd": 0.00055704,
+    "list_cost_usd": 0.0015048
+  },
+  "cost_usd": 0.00055704,
+  "extraction": {
+    "document_type": "receipt",
+    "document": {
+      "number": null,
+      "date": null,
+      "time": null,
+      "due_date": null,
+      "payment_terms": null,
+      "currency": "IDR",
+      "country": "ID",
+      "language": "id"
+    },
+    "merchant": {
+      "name": null,
+      "legal_name": null,
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "tax_ids": [],
+      "store_id": null,
+      "cashier": null,
+      "table": null
+    },
+    "customer": {
+      "name": null,
+      "address": null,
+      "tax_id": null,
+      "account_id": null
+    },
+    "amounts": {
+      "subtotal": 81000,
+      "discount_total": null,
+      "tax_total": 8100,
+      "tip": null,
+      "service_charge": null,
+      "delivery_fee": null,
+      "shipping": null,
+      "rounding": null,
+      "total": 89100,
+      "amount_paid": 89100,
+      "change": 0,
+      "amount_due": null,
+      "prior_balance": null,
+      "taxes": [
+        {
+          "label": "PB 1",
+          "rate_percent": 10,
+          "base": 81000,
+          "amount": 8100,
+          "jurisdiction": null,
+          "included_in_price": null
+        }
+      ]
+    },
+    "payment": {
+      "method": "card",
+      "card_brand": null,
+      "card_last4": null,
+      "transaction_id": null,
+      "auth_code": null
+    },
+    "line_items": [
+      {
+        "description": "Sapi Sambal Matah (R)",
+        "sku": null,
+        "quantity": 1,
+        "unit": null,
+        "unit_price": 20000,
+        "gross_amount": 20000,
+        "discount": null,
+        "net_amount": 20000,
+        "tax_rate_percent": null,
+        "category": "food_dining",
+        "notes": null
+      },
+      {
+        "description": "Sapi Lada Hitam (J)",
+        "sku": null,
+        "quantity": 1,
+        "unit_price": 35000,
+        "gross_amount": 35000,
+        "discount": null,
+        "net_amount": 35000,
+        "tax_rate_percent": null,
+        "category": "food_dining",
+        "notes": null
+      },
+      {
+        "description": "Nasi Putih",
+        "sku": null,
+        "quantity": 2,
+        "unit": null,
+        "unit_price": 9000,
+        "gross_amount": 18000,
+        "discount": null,
+        "net_amount": 18000,
+        "tax_rate_percent": null,
+        "category": "food_dining",
+        "notes": null
+      },
+      {
+        "description": "Milk Shake Coklat",
+        "sku": null,
+        "quantity": 1,
+        "unit": null,
+        "unit_price": 16000,
+        "gross_amount": 16000,
+        "discount": null,
+        "net_amount": 16000,
+        "tax_rate_percent": null,
+        "category": "food_dining",
+        "notes": null
+      }
+    ],
+    "classification": {
+      "category": "food_dining",
+      "subcategory": null,
+      "purpose_summary": "Dining at a restaurant with beef dishes, rice, and a milkshake",
+      "is_business_expense": null,
+      "tags": []
+    },
+    "quality": {
+      "legibility": "medium",
+      "handwritten": false,
+      "blur": false,
+      "glare": false,
+      "cropped": false,
+      "arithmetic_ok": true,
+      "duplicate_suspected": false,
+      "confidence": 0.75,
+      "warnings": [
+        "Merchant name and document number are not clearly readable from the image."
+      ]
+    }
+  }
+}

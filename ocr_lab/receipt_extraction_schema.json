@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/receipt-extraction-v1.json",
+  "title": "Receipt and invoice extraction v1",
+  "description": "Engine-agnostic extraction contract for scanned receipts and invoices. Monetary values are decimal numbers in major currency units; use null when the value is not visible.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "document_type",
+    "document",
+    "merchant",
+    "customer",
+    "amounts",
+    "payment",
+    "line_items",
+    "classification",
+    "quality"
+  ],
+  "properties": {
+    "document_type": {
+      "type": "string",
+      "enum": ["receipt", "invoice", "credit_note", "refund", "other", "unknown"],
+      "description": "What the document is, not what it was used for."
+    },
+    "document": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "number": {"type": ["string", "null"], "description": "Receipt, invoice, check or transaction number."},
+        "date": {"type": ["string", "null"], "description": "Issue date normalized to YYYY-MM-DD."},
+        "time": {"type": ["string", "null"], "description": "Issue time normalized to HH:MM (24h)."},
+        "due_date": {"type": ["string", "null"], "description": "Invoice due date normalized to YYYY-MM-DD."},
+        "payment_terms": {"type": ["string", "null"], "description": "Printed payment terms, e.g. Net 30."},
+        "currency": {"type": ["string", "null"], "description": "ISO 4217 code inferred only from a visible symbol/code or unambiguous locale evidence."},
+        "country": {"type": ["string", "null"], "description": "ISO 3166-1 alpha-2 country of the transaction."},
+        "language": {"type": ["string", "null"], "description": "ISO 639-1 language of the printed document."}
+      }
+    },
+    "merchant": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": ["string", "null"], "description": "Customer-facing merchant name, e.g. restaurant name."},
+        "legal_name": {"type": ["string", "null"], "description": "Registered legal entity name when printed."},
+        "address": {"type": ["string", "null"], "description": "Full printed merchant address."},
+        "phone": {"type": ["string", "null"]},
+        "email": {"type": ["string", "null"]},
+        "website": {"type": ["string", "null"]},
+        "tax_ids": {
+          "type": "array",
+          "description": "VAT/GST/ABN/EIN/IČO/DIČ and similar identifiers printed on the document.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": {"type": ["string", "null"], "description": "VAT, GST, ABN, EIN, ICO, DIC, TIN, other."},
+              "value": {"type": ["string", "null"]}
+            }
+          }
+        },
+        "store_id": {"type": ["string", "null"], "description": "Branch/store number."},
+        "cashier": {"type": ["string", "null"]},
+        "table": {"type": ["string", "null"], "description": "Table, check or guest number for restaurant receipts."}
+      }
+    },
+    "customer": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": ["string", "null"]},
+        "address": {"type": ["string", "null"]},
+        "tax_id": {"type": ["string", "null"], "description": "Customer VAT/tax identifier for invoices."},
+        "account_id": {"type": ["string", "null"], "description": "Customer, loyalty or account number."}
+      }
+    },
+    "amounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "subtotal": {"type": ["number", "null"], "description": "Net amount before taxes, tips, service and shipping."},
+        "discount_total": {"type": ["number", "null"], "description": "Total discounts; positive number even when printed as a subtraction."},
+        "tax_total": {"type": ["number", "null"], "description": "Sum of all taxes, including US sales tax and VAT."},
+        "tip": {"type": ["number", "null"], "description": "Voluntary gratuity/tip. Keep separate from service charge."},
+        "service_charge": {"type": ["number", "null"], "description": "Mandatory service charge or auto-gratuity."},
+        "delivery_fee": {"type": ["number", "null"]},
+        "shipping": {"type": ["number", "null"]},
+        "rounding": {"type": ["number", "null"], "description": "Cash rounding adjustment, signed."},
+        "total": {"type": ["number", "null"], "description": "Final amount paid or due, including taxes, tip, service and fees, after discounts."},
+        "amount_paid": {"type": ["number", "null"], "description": "Tendered/charged amount when it differs from total."},
+        "change": {"type": ["number", "null"]},
+        "amount_due": {"type": ["number", "null"], "description": "Outstanding invoice balance."},
+        "prior_balance": {"type": ["number", "null"]},
+        "taxes": {
+          "type": "array",
+          "description": "One row per tax rate/jurisdiction, e.g. VAT 21%, US state+local sales tax.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "label": {"type": ["string", "null"], "description": "Printed label, e.g. VAT, DPH, Sales Tax, GST."},
+              "rate_percent": {"type": ["number", "null"]},
+              "base": {"type": ["number", "null"], "description": "Taxable base amount."},
+              "amount": {"type": ["number", "null"]},
+              "jurisdiction": {"type": ["string", "null"], "description": "State/city/country when printed or unambiguous."},
+              "included_in_price": {"type": ["boolean", "null"], "description": "True when tax is included in the printed prices (common EU VAT)."}
+            }
+          }
+        }
+      }
+    },
+    "payment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "method": {"type": ["string", "null"], "description": "cash, card, mobile, bank_transfer, other."},
+        "card_brand": {"type": ["string", "null"]},
+        "card_last4": {"type": ["string", "null"], "description": "Only the last four digits."},
+        "transaction_id": {"type": ["string", "null"]},
+        "auth_code": {"type": ["string", "null"]}
+      }
+    },
+    "line_items": {
+      "type": "array",
+      "description": "Purchased lines in printed order. Keep modifiers as part of the parent item where possible.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "description": {"type": ["string", "null"]},
+          "sku": {"type": ["string", "null"]},
+          "quantity": {"type": ["number", "null"]},
+          "unit": {"type": ["string", "null"], "description": "pcs, kg, l, hour, etc."},
+          "unit_price": {"type": ["number", "null"]},
+          "gross_amount": {"type": ["number", "null"], "description": "Line amount before line discount."},
+          "discount": {"type": ["number", "null"], "description": "Line discount as a positive number."},
+          "net_amount": {"type": ["number", "null"], "description": "Line amount after discount, before document-level tax/tip."},
+          "tax_rate_percent": {"type": ["number", "null"]},
+          "category": {"type": ["string", "null"], "description": "Optional item-level expense category."},
+          "notes": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": ["food_dining", "groceries", "fuel", "transport", "lodging", "healthcare", "office_supplies", "utilities", "entertainment", "travel", "retail", "services", "other", "unknown"],
+          "description": "Primary expense category."
+        },
+        "subcategory": {"type": ["string", "null"], "description": "e.g. restaurant, delivery, taxi, parking, hotel, pharmacy."},
+        "purpose_summary": {"type": ["string", "null"], "description": "Short English phrase answering what was bought and why, e.g. 'Team lunch at Italian restaurant'."},
+        "is_business_expense": {"type": ["boolean", "null"], "description": "Only set true/false when the document itself makes it clear; otherwise null."},
+        "tags": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "legibility": {"type": ["string", "null"], "enum": ["high", "medium", "low", null]},
+        "handwritten": {"type": ["boolean", "null"]},
+        "blur": {"type": ["boolean", "null"]},
+        "glare": {"type": ["boolean", "null"]},
+        "cropped": {"type": ["boolean", "null"]},
+        "arithmetic_ok": {"type": ["boolean", "null"], "description": "True when subtotal + tax + tip + fees - discounts equals total within rounding."},
+        "duplicate_suspected": {"type": ["boolean", "null"]},
+        "confidence": {"type": ["number", "null"], "description": "Overall extraction confidence from 0 to 1."},
+        "warnings": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "description": "Optional audit block, requested only in audit mode.",
+      "additionalProperties": false,
+      "properties": {
+        "merchant": {"type": ["string", "null"]},
+        "date": {"type": ["string", "null"]},
+        "total": {"type": ["string", "null"]},
+        "tax": {"type": ["string", "null"]},
+        "tip": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

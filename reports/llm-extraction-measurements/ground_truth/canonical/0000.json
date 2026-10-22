@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "prompt_version": "receipt-extraction-v1",
+  "source": {
+    "id": "0000",
+    "image": "cord-v2/images/validation/0000.jpg",
+    "image_sha256": "fce942f87441dfcd19f38a2e8ee9ab17b53db5c76cdfc1119f11f1228bedcc37",
+    "split": "validation",
+    "model": "deepseek/deepseek-v4.1-flash",
+    "input_mode": "both",
+    "provider": "OpenInference",
+    "created_at": "2026-10-22T06:23:34+00:00"
+  },
+  "usage": {
+    "prompt_tokens": 1170,
+    "completion_tokens": 543,
+    "total_tokens": 1713,
+    "reasoning_tokens": 0,
+    "cached_tokens": 0,
+    "image_tokens": 0,
+    "cost_usd": 0.0003534,
+    "list_cost_usd": 0.0010026
+  },
+  "cost_usd": 0.0003534,
+  "extraction": {
+    "document_type": "receipt",
+    "document": {
+      "number": null,
+      "date": null,
+      "time": null,
+      "due_date": null,
+      "payment_terms": null,
+      "currency": null,
+      "country": null,
+      "language": null
+    },
+    "merchant": {
+      "name": "TOKO LEO JEMBER",
+      "legal_name": null,
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "tax_ids": [],
+      "store_id": null,
+      "cashier": null,
+      "table": null
+    },
+    "customer": {
+      "name": null,
+      "address": null,
+      "tax_id": null,
+      "account_id": null
+    },
+    "amounts": {
+      "subtotal": null,
+      "discount_total": null,
+      "tax_total": null,
+      "tip": null,
+      "service_charge": null,
+      "delivery_fee": null,
+      "shipping": null,
+      "rounding": null,
+      "total": 45.5,
+      "amount_paid": 50.0,
+      "change": 4.5,
+      "amount_due": null,
+      "prior_balance": null,
+      "taxes": []
+    },
+    "payment": {
+      "method": "cash",
+      "card_brand": null,
+      "card_last4": null,
+      "transaction_id": null,
+      "auth_code": null
+    },
+    "line_items": [
+      {
+        "description": "REAL GANOCHE",
+        "sku": null,
+        "quantity": 1,
+        "unit": null,
+        "unit_price": 16.5,
+        "gross_amount": 16.5,
+        "discount": null,
+        "net_amount": 16.5,
+        "tax_rate_percent": null,
+        "category": null,
+        "notes": null
+      },
+      {
+        "description": "EGG TART",
+        "sku": null,
+        "quantity": 1,
+        "unit": null,
+        "unit_price": 13.0,
+        "gross_amount": 13.0,
+        "discount": null,
+        "net_amount": 13.0,
+        "tax_rate_percent": null,
+        "category": null,
+        "notes": null
+      },
+      {
+        "description": "PIZZA TOAST",
+        "sku": null,
+        "quantity": 1,
+        "unit": null,
+        "unit_price": 16.0,
+        "gross_amount": 16.0,
+        "discount": null,
+        "net_amount": 16.0,
+        "tax_rate_percent": null,
+        "category": null,
+        "notes": null
+      }
+    ],
+    "classification": {
+      "category": "food_dining",
+      "subcategory": null,
+      "purpose_summary": "Purchase of food items including real ganoche, egg tart, and pizza toast",
+      "is_business_expense": null,
+      "tags": []
+    },
+    "quality": {
+      "legibility": "medium",
+      "handwritten": null,
+      "blur": true,
+      "glare": null,
+      "cropped": null,
+      "arithmetic_ok": true,
+      "duplicate_suspected": null,
+      "confidence": 0.6,
+      "warnings": [
+        "Currency not visible",
+        "Date and time not visible",
+        "Merchant address and tax IDs not visible"
+      ]
+    }
+  }
+}

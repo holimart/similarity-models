@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "prompt_version": "receipt-extraction-v1",
+  "source": {
+    "id": "10",
+    "image": "cord-v2/images/validation/0010.jpg",
+    "image_sha256": "594b0d39fc54a9495a45b8a3aea8ad736c067e8328480cb51e440e5860ecbe29",
+    "split": "validation",
+    "model": "deepseek/deepseek-v4.1-flash",
+    "input_mode": "both",
+    "provider": "OpenInference",
+    "created_at": "2026-10-22T06:44:27+00:00"
+  },
+  "usage": {
+    "prompt_tokens": 1219,
+    "completion_tokens": 704,
+    "total_tokens": 1923,
+    "reasoning_tokens": 0,
+    "cached_tokens": 0,
+    "image_tokens": 0,
+    "cost_usd": 0.00043733,
+    "list_cost_usd": 0.0012105
+  },
+  "cost_usd": 0.00043733,
+  "extraction": {
+    "document_type": "receipt",
+    "document": {
+      "number": null,
+      "date": null,
+      "time": null,
+      "due_date": null,
+      "payment_terms": null,
+      "currency": null,
+      "country": null,
+      "language": null
+    },
+    "merchant": {
+      "name": null,
+      "legal_name": null,
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "tax_ids": [],
+      "store_id": null,
+      "cashier": null,
+      "table": null
+    },
+    "customer": {
+      "name": null,
+      "address": null,
+      "tax_id": null,
+      "account_id": null
+    },
+    "amounts": {
+      "subtotal": null,
+      "discount_total": null,
+      "tax_total": null,
+      "tip": null,
+      "service_charge": null,
+      "delivery_fee": null,
+      "shipping": null,
+      "rounding": null,
+      "total": 60.0,
+      "amount_paid": 60.0,
+      "change": 0.0,
+      "amount_due": null,
+      "prior_balance": null,
+      "taxes": []
+    },
+    "payment": {
+      "method": "cash",
+      "card_brand": null,
+      "card_last4": null,
+      "transaction_id": null,
+      "auth_code": null
+    },
+    "line_items": [
+      {
+        "description": "Serbu 1",
+        "sku": null,
+        "quantity": 2,
+        "unit": null,
+        "unit_price": 20.0,
+        "gross_amount": 40.0,
+        "discount": null,
+        "net_amount": 40.0,
+        "tax_rate_percent": null,
+        "category": null,
+        "notes": null
+      },
+      {
+        "description": "Choco Peanut Bread",
+        "sku": null,
+        "quantity": 2,
+        "unit": null,
+        "unit_price": 10.0,
+        "gross_amount": 20.0,
+        "discount": null,
+        "net_amount": 20.0,
+        "tax_rate_percent": null,
+        "category": null,
+        "notes": null
+      }
+    ],
+    "classification": {
+      "category": "food_dining",
+      "subcategory": null,
+      "purpose_summary": "Purchase of food items including Serbu 1 and Choco Peanut Bread",
+      "is_business_expense": null,
+      "tags": []
+    },
+    "quality": {
+      "legibility": "low",
+      "handwritten": false,
+      "blur": true,
+      "glare": false,
+      "cropped": false,
+      "arithmetic_ok": true,
+      "duplicate_suspected": false,
+      "confidence": 0.55,
+      "warnings": [
+        "OCR transcript is noisy and partially unreadable",
+        "Merchant name and document date are not visible",
+        "Currency cannot be determined from the document"
+      ]
+    }
+  }
+}

@@ -130,6 +130,19 @@ python3 scripts/evaluate_total_amount_llm.py --model gpt-oss:20b --dataset sroie
   --output runs/amount-llm/gpt-oss-20b-sroie-pilot.jsonl --think low --num-predict 128 --threads 12
 ```
 
+## Receipt/invoice LLM extraction: tokens, cost and ground truth
+
+`scripts/measure_receipt_llm.py` measures provider-reported input/output tokens and cost for vision LLMs on a receipt/invoice corpus. It supports three input modes so the image-vs-OCR cost can be isolated: `image`, `ocr`, and `both` (image plus OCR transcript). OCR runs locally (Tesseract or RapidOCR) and is cached; `--precomputed-ocr` reuses an existing OCR JSONL. The script writes `results.jsonl`, `summary.json`, `summary.md`, optional per-document ground-truth JSON, and an optional consensus/review queue.
+
+```bash
+python3 scripts/measure_receipt_llm.py --images /path/to/receipts \
+  --models deepseek/deepseek-v4.1-flash z-ai/glm-5.3-flash \
+  --input-mode image ocr both --out-dir runs/llm-extraction \
+  --ground-truth-dir runs/llm-extraction/ground_truth --consensus
+```
+
+The extraction contract is in `ocr_lab/receipt_extraction_schema.json`; prompt/parsing/consensus helpers are in `ocr_lab/receipt_extraction.py`. It covers document identity, merchant/customer tax IDs, subtotal/discounts/tax breakdown/tip/service charge/total/payment, line items with quantities and tax rates, purpose/category, quality flags and optional evidence. The measured DeepSeek V4.1 Flash and GLM 5.3 Flash token costs on 20 CORD receipts, the field checklist, and the caveats are in [`reports/LLM receipt extraction cost measurement.md`](reports/LLM%20receipt%20extraction%20cost%20measurement.md). This produces LLM-generated ground truth, not human-verified labels; `--consensus` flags disagreements for review.
+
 ## Current scope
 
 - One image per command; no GUI, camera feed, tuning sweep, or automatic model download manager yet.

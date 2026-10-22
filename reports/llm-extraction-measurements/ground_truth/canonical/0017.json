@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "prompt_version": "receipt-extraction-v1",
+  "source": {
+    "id": "17",
+    "image": "cord-v2/images/validation/0017.jpg",
+    "image_sha256": "aa558ce3ddc42893625b4fa71d60a5d6d6cb2cf0d6ab469b21f13a204241d273",
+    "split": "validation",
+    "model": "deepseek/deepseek-v4.1-flash",
+    "input_mode": "both",
+    "provider": "OpenInference",
+    "created_at": "2026-10-22T06:59:40+00:00"
+  },
+  "usage": {
+    "prompt_tokens": 1205,
+    "completion_tokens": 409,
+    "total_tokens": 1614,
+    "reasoning_tokens": 0,
+    "cached_tokens": 0,
+    "image_tokens": 0,
+    "cost_usd": 0.00028885,
+    "list_cost_usd": 0.0008523000000000001
+  },
+  "cost_usd": 0.00028885,
+  "extraction": {
+    "document_type": "receipt",
+    "document": {
+      "number": null,
+      "date": null,
+      "time": null,
+      "due_date": null,
+      "payment_terms": null,
+      "currency": "IDR",
+      "country": "ID",
+      "language": "id"
+    },
+    "merchant": {
+      "name": null,
+      "legal_name": null,
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "tax_ids": [
+        {
+          "type": null,
+          "value": null
+        }
+      ],
+      "store_id": null,
+      "cashier": null,
+      "table": null
+    },
+    "customer": {
+      "name": null,
+      "address": null,
+      "tax_id": null,
+      "account_id": null
+    },
+    "amounts": {
+      "subtotal": 20000,
+      "discount_total": null,
+      "tax_total": null,
+      "tip": null,
+      "service_charge": null,
+      "delivery_fee": null,
+      "shipping": null,
+      "rounding": null,
+      "total": 20000,
+      "amount_paid": 100000,
+      "change": 50000,
+      "amount_due": null,
+      "prior_balance": null,
+      "taxes": []
+    },
+    "payment": {
+      "method": "cash",
+      "card_brand": null,
+      "card_last4": null,
+      "transaction_id": null,
+      "auth_code": null
+    },
+    "line_items": [
+      {
+        "description": "LEMONADE 160Z",
+        "sku": null,
+        "quantity": 1,
+        "unit": null,
+        "unit_price": 20000,
+        "gross_amount": 20000,
+        "discount": null,
+        "net_amount": 20000,
+        "tax_rate_percent": null,
+        "category": "food_dining",
+        "notes": null
+      }
+    ],
+    "classification": {
+      "category": "food_dining",
+      "subcategory": null,
+      "purpose_summary": "Purchase of a lemonade beverage",
+      "is_business_expense": null,
+      "tags": []
+    },
+    "quality": {
+      "legibility": "medium",
+      "handwritten": null,
+      "blur": true,
+      "glare": null,
+      "cropped": false,
+      "arithmetic_ok": true,
+      "duplicate_suspected": null,
+      "confidence": 0.6,
+      "warnings": [
+        "Merchant name and document number are unreadable",
+        "OCR transcript contains errors"
+      ]
+    }
+  }
+}

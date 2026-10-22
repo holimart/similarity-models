@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "prompt_version": "receipt-extraction-v1",
+  "source": {
+    "id": "1",
+    "image": "cord-v2/images/validation/0001.jpg",
+    "image_sha256": "f0b5cad3ba5d008bb51fda0d40e93e86b69e173544f28266d95a18335ec57f27",
+    "split": "validation",
+    "model": "deepseek/deepseek-v4.1-flash",
+    "input_mode": "both",
+    "provider": "OpenInference",
+    "created_at": "2026-10-22T06:25:37+00:00"
+  },
+  "usage": {
+    "prompt_tokens": 1222,
+    "completion_tokens": 405,
+    "total_tokens": 1627,
+    "reasoning_tokens": 0,
+    "cached_tokens": 0,
+    "image_tokens": 0,
+    "cost_usd": 0.00028804,
+    "list_cost_usd": 0.0008526
+  },
+  "cost_usd": 0.00028804,
+  "extraction": {
+    "document_type": "receipt",
+    "document": {
+      "number": null,
+      "date": null,
+      "time": null,
+      "due_date": null,
+      "payment_terms": null,
+      "currency": "IDR",
+      "country": "ID",
+      "language": "id"
+    },
+    "merchant": {
+      "name": "404 Coffee & Co.",
+      "legal_name": null,
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "tax_ids": [],
+      "store_id": null,
+      "cashier": null,
+      "table": null
+    },
+    "customer": {
+      "name": null,
+      "address": null,
+      "tax_id": null,
+      "account_id": null
+    },
+    "amounts": {
+      "subtotal": 23000,
+      "discount_total": null,
+      "tax_total": null,
+      "tip": null,
+      "service_charge": null,
+      "delivery_fee": null,
+      "shipping": null,
+      "rounding": null,
+      "total": 23000,
+      "amount_paid": 50000,
+      "change": 27000,
+      "amount_due": null,
+      "prior_balance": null,
+      "taxes": []
+    },
+    "payment": {
+      "method": "cash",
+      "card_brand": null,
+      "card_last4": null,
+      "transaction_id": null,
+      "auth_code": null
+    },
+    "line_items": [
+      {
+        "description": "Kopi Susu Kolonel",
+        "sku": null,
+        "quantity": 1,
+        "unit": null,
+        "unit_price": 23000,
+        "gross_amount": 23000,
+        "discount": null,
+        "net_amount": 23000,
+        "tax_rate_percent": null,
+        "category": "food_dining",
+        "notes": null
+      }
+    ],
+    "classification": {
+      "category": "food_dining",
+      "subcategory": "coffee_shop",
+      "purpose_summary": "Purchase of Kopi Susu Kolonel coffee beverage",
+      "is_business_expense": null,
+      "tags": []
+    },
+    "quality": {
+      "legibility": "medium",
+      "handwritten": null,
+      "blur": null,
+      "glare": null,
+      "cropped": null,
+      "arithmetic_ok": true,
+      "duplicate_suspected": null,
+      "confidence": 0.75,
+      "warnings": [
+        "Date and time not visible in OCR transcript"
+      ]
+    }
+  }
+}

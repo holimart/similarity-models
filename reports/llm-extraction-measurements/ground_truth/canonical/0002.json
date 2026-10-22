@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "prompt_version": "receipt-extraction-v1",
+  "source": {
+    "id": "2",
+    "image": "cord-v2/images/validation/0002.jpg",
+    "image_sha256": "85c56ae34476cd2258b151ee2b61513dcfc700f122d5d0094e5529a3db8922c4",
+    "split": "validation",
+    "model": "deepseek/deepseek-v4.1-flash",
+    "input_mode": "both",
+    "provider": "OpenInference",
+    "created_at": "2026-10-22T06:27:16+00:00"
+  },
+  "usage": {
+    "prompt_tokens": 1243,
+    "completion_tokens": 662,
+    "total_tokens": 1905,
+    "reasoning_tokens": 0,
+    "cached_tokens": 0,
+    "image_tokens": 0,
+    "cost_usd": 0.00041801,
+    "list_cost_usd": 0.0011673
+  },
+  "cost_usd": 0.00041801,
+  "extraction": {
+    "document_type": "receipt",
+    "document": {
+      "number": null,
+      "date": null,
+      "time": null,
+      "due_date": null,
+      "payment_terms": null,
+      "currency": "IDR",
+      "country": "ID",
+      "language": "id"
+    },
+    "merchant": {
+      "name": "KOI Thé",
+      "legal_name": null,
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "tax_ids": [],
+      "store_id": null,
+      "cashier": null,
+      "table": null
+    },
+    "customer": {
+      "name": null,
+      "address": null,
+      "tax_id": null,
+      "account_id": null
+    },
+    "amounts": {
+      "subtotal": 18181,
+      "discount_total": null,
+      "tax_total": null,
+      "tip": null,
+      "service_charge": null,
+      "delivery_fee": null,
+      "shipping": null,
+      "rounding": null,
+      "total": 20000,
+      "amount_paid": 100000,
+      "change": 80000,
+      "amount_due": null,
+      "prior_balance": null,
+      "taxes": [
+        {
+          "label": "10% Tax Included",
+          "rate_percent": 10,
+          "base": null,
+          "amount": null,
+          "jurisdiction": null,
+          "included_in_price": true
+        }
+      ]
+    },
+    "payment": {
+      "method": "cash",
+      "card_brand": null,
+      "card_last4": null,
+      "transaction_id": null,
+      "auth_code": null
+    },
+    "line_items": [
+      {
+        "description": "5-Ovaltine 50%",
+        "sku": null,
+        "quantity": null,
+        "unit": null,
+        "unit_price": null,
+        "gross_amount": 20000,
+        "discount": null,
+        "net_amount": null,
+        "tax_rate_percent": null,
+        "category": null,
+        "notes": null
+      }
+    ],
+    "classification": {
+      "category": "food_dining",
+      "subcategory": null,
+      "purpose_summary": "Purchase of a beverage at KOI Thé",
+      "is_business_expense": null,
+      "tags": []
+    },
+    "quality": {
+      "legibility": "low",
+      "handwritten": false,
+      "blur": true,
+      "glare": false,
+      "cropped": false,
+      "arithmetic_ok": false,
+      "duplicate_suspected": false,
+      "confidence": 0.35,
+      "warnings": [
+        "OCR transcript is noisy and partially unreadable",
+        "Subtotal + tax does not equal total; tax amount is not shown",
+        "Line item description is uncertain"
+      ]
+    }
+  }
+}

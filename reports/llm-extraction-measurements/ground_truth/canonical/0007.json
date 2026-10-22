@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "prompt_version": "receipt-extraction-v1",
+  "source": {
+    "id": "7",
+    "image": "cord-v2/images/validation/0007.jpg",
+    "image_sha256": "70b2c7b73684a42078d13d61c49f1823f0b153c03c576435abe13e10f34c7698",
+    "split": "validation",
+    "model": "deepseek/deepseek-v4.1-flash",
+    "input_mode": "both",
+    "provider": "OpenInference",
+    "created_at": "2026-10-22T06:38:03+00:00"
+  },
+  "usage": {
+    "prompt_tokens": 1191,
+    "completion_tokens": 696,
+    "total_tokens": 1887,
+    "reasoning_tokens": 0,
+    "cached_tokens": 0,
+    "image_tokens": 0,
+    "cost_usd": 0.00043137,
+    "list_cost_usd": 0.0011925
+  },
+  "cost_usd": 0.00043137,
+  "extraction": {
+    "document_type": "receipt",
+    "document": {
+      "number": null,
+      "date": null,
+      "time": null,
+      "due_date": null,
+      "payment_terms": null,
+      "currency": "HUF",
+      "country": "HU",
+      "language": "hu"
+    },
+    "merchant": {
+      "name": "DiVino",
+      "legal_name": null,
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "tax_ids": [],
+      "store_id": null,
+      "cashier": null,
+      "table": null
+    },
+    "customer": {
+      "name": null,
+      "address": null,
+      "tax_id": null,
+      "account_id": null
+    },
+    "amounts": {
+      "subtotal": 63.636,
+      "discount_total": -9.545,
+      "tax_total": null,
+      "tip": null,
+      "service_charge": null,
+      "delivery_fee": null,
+      "shipping": null,
+      "rounding": null,
+      "total": 59.5,
+      "amount_paid": 100.0,
+      "change": 40.5,
+      "amount_due": null,
+      "prior_balance": null,
+      "taxes": []
+    },
+    "payment": {
+      "method": "cash",
+      "card_brand": null,
+      "card_last4": null,
+      "transaction_id": null,
+      "auth_code": null
+    },
+    "line_items": [
+      {
+        "description": "Choco Devil",
+        "sku": null,
+        "quantity": null,
+        "unit": null,
+        "unit_price": null,
+        "gross_amount": 63.636,
+        "discount": null,
+        "net_amount": null,
+        "tax_rate_percent": null,
+        "category": null,
+        "notes": null
+      },
+      {
+        "description": "CP 360 Club Card",
+        "sku": null,
+        "quantity": null,
+        "unit": null,
+        "unit_price": null,
+        "gross_amount": null,
+        "discount": -9.545,
+        "net_amount": null,
+        "tax_rate_percent": null,
+        "category": null,
+        "notes": null
+      }
+    ],
+    "classification": {
+      "category": "food_dining",
+      "subcategory": null,
+      "purpose_summary": "Purchase of Choco Devil item with club card discount",
+      "is_business_expense": null,
+      "tags": []
+    },
+    "quality": {
+      "legibility": "low",
+      "handwritten": false,
+      "blur": true,
+      "glare": false,
+      "cropped": false,
+      "arithmetic_ok": true,
+      "duplicate_suspected": false,
+      "confidence": 0.4,
+      "warnings": [
+        "OCR transcript is incomplete and partially illegible",
+        "Date and time are not visible",
+        "Currency inferred from Hungarian locale and 'Ft' symbol"
+      ]
+    }
+  }
+}

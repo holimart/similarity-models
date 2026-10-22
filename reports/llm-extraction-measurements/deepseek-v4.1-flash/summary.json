@@ -1,0 +1,199 @@
+{
+  "generated_at": "2026-10-22T15:23:44+00:00",
+  "prompt_version": "receipt-extraction-v1",
+  "n_rows_raw": 60,
+  "n_rows": 60,
+  "n_errors": 0,
+  "total_cost_all_attempts_usd": 0.02453303099999999,
+  "error_counts": {},
+  "models": {
+    "deepseek/deepseek-v4.1-flash": {
+      "modes": {
+        "InferenceNet::both": {
+          "provider": "InferenceNet",
+          "n": 3,
+          "n_success": 3,
+          "json_valid_rate": 1.0,
+          "avg_attempts": 1,
+          "avg_prompt_tokens": 1741.3333333333333,
+          "p50_prompt_tokens": 1699,
+          "p95_prompt_tokens": 2236.0,
+          "avg_completion_tokens": 711,
+          "p50_completion_tokens": 721,
+          "p95_completion_tokens": 752.0,
+          "avg_reasoning_tokens": 0,
+          "avg_cost_usd": 0.0006877223333333334,
+          "avg_list_cost_usd": 0.0013756,
+          "p50_cost_usd": 0.000712677,
+          "p95_cost_usd": 0.000745823,
+          "total_cost_usd": 0.002063167,
+          "cost_per_1k_usd": 0.6877223333333333,
+          "cost_per_100k_usd": 68.77223333333333,
+          "cost_per_1m_usd": 687.7223333333334,
+          "list_cost_per_1k_usd": 1.3756,
+          "list_cost_per_100k_usd": 137.56,
+          "list_cost_per_1m_usd": 1375.6000000000001,
+          "pricing": {
+            "input": 0.3,
+            "output": 1.2,
+            "cache_read": 0.006
+          }
+        },
+        "OpenInference::both": {
+          "provider": "OpenInference",
+          "n": 17,
+          "n_success": 17,
+          "json_valid_rate": 1.0,
+          "avg_attempts": 1.3529411764705883,
+          "avg_prompt_tokens": 1269.0588235294117,
+          "p50_prompt_tokens": 1235,
+          "p95_prompt_tokens": 1405.0,
+          "avg_completion_tokens": 575,
+          "p50_completion_tokens": 543,
+          "p95_completion_tokens": 739.0,
+          "avg_reasoning_tokens": 0,
+          "avg_cost_usd": 0.00037633411764705885,
+          "avg_list_cost_usd": 0.0010707176470588235,
+          "p50_cost_usd": 0.00035819,
+          "p95_cost_usd": 0.00046498,
+          "total_cost_usd": 0.006397680000000001,
+          "cost_per_1k_usd": 0.3763341176470589,
+          "cost_per_100k_usd": 37.63341176470588,
+          "cost_per_1m_usd": 376.33411764705886,
+          "list_cost_per_1k_usd": 1.0707176470588236,
+          "list_cost_per_100k_usd": 107.07176470588234,
+          "list_cost_per_1m_usd": 1070.7176470588236,
+          "pricing": {
+            "input": 0.3,
+            "output": 1.2,
+            "cache_read": 0.006
+          }
+        },
+        "InferenceNet::image": {
+          "provider": "InferenceNet",
+          "n": 2,
+          "n_success": 2,
+          "json_valid_rate": 1.0,
+          "avg_attempts": 1,
+          "avg_prompt_tokens": 1417.5,
+          "p50_prompt_tokens": 1417.5,
+          "p95_prompt_tokens": 1601.0,
+          "avg_completion_tokens": 732.5,
+          "p50_completion_tokens": 732.5,
+          "p95_completion_tokens": 764.0,
+          "avg_reasoning_tokens": 0,
+          "avg_cost_usd": 0.00066974,
+          "avg_list_cost_usd": 0.0013042499999999999,
+          "p50_cost_usd": 0.00066974,
+          "p95_cost_usd": 0.000711163,
+          "total_cost_usd": 0.00133948,
+          "cost_per_1k_usd": 0.66974,
+          "cost_per_100k_usd": 66.974,
+          "cost_per_1m_usd": 669.74,
+          "list_cost_per_1k_usd": 1.30425,
+          "list_cost_per_100k_usd": 130.42499999999998,
+          "list_cost_per_1m_usd": 1304.2499999999998,
+          "pricing": {
+            "input": 0.3,
+            "output": 1.2,
+            "cache_read": 0.006
+          }
+        },
+        "OpenInference::image": {
+          "provider": "OpenInference",
+          "n": 18,
+          "n_success": 18,
+          "json_valid_rate": 1.0,
+          "avg_attempts": 1.4444444444444444,
+          "avg_prompt_tokens": 1112.7222222222222,
+          "p50_prompt_tokens": 1111.0,
+          "p95_prompt_tokens": 1117.0,
+          "avg_completion_tokens": 677.6666666666666,
+          "p50_completion_tokens": 684.5,
+          "p95_completion_tokens": 839.0,
+          "avg_reasoning_tokens": 0,
+          "avg_cost_usd": 0.0004167238888888889,
+          "avg_list_cost_usd": 0.0011470166666666666,
+          "p50_cost_usd": 0.00042023,
+          "p95_cost_usd": 0.00049727,
+          "total_cost_usd": 0.00750103,
+          "cost_per_1k_usd": 0.4167238888888889,
+          "cost_per_100k_usd": 41.67238888888889,
+          "cost_per_1m_usd": 416.7238888888889,
+          "list_cost_per_1k_usd": 1.1470166666666666,
+          "list_cost_per_100k_usd": 114.70166666666665,
+          "list_cost_per_1m_usd": 1147.0166666666667,
+          "pricing": {
+            "input": 0.3,
+            "output": 1.2,
+            "cache_read": 0.006
+          }
+        },
+        "OpenInference::ocr": {
+          "provider": "OpenInference",
+          "n": 20,
+          "n_success": 20,
+          "json_valid_rate": 1.0,
+          "avg_attempts": 1.65,
+          "avg_prompt_tokens": 1067.05,
+          "p50_prompt_tokens": 1024.0,
+          "p95_prompt_tokens": 1220.0,
+          "avg_completion_tokens": 602.35,
+          "p50_completion_tokens": 565.5,
+          "p95_completion_tokens": 794.0,
+          "avg_reasoning_tokens": 0,
+          "avg_cost_usd": 0.0003615837,
+          "avg_list_cost_usd": 0.0009751973999999999,
+          "p50_cost_usd": 0.00033804099999999997,
+          "p95_cost_usd": 0.00046945,
+          "total_cost_usd": 0.007231674000000002,
+          "cost_per_1k_usd": 0.36158369999999995,
+          "cost_per_100k_usd": 36.15837,
+          "cost_per_1m_usd": 361.58369999999996,
+          "list_cost_per_1k_usd": 0.9751974,
+          "list_cost_per_100k_usd": 97.51974,
+          "list_cost_per_1m_usd": 975.1973999999999,
+          "pricing": {
+            "input": 0.3,
+            "output": 1.2,
+            "cache_read": 0.006
+          }
+        }
+      },
+      "paired_incremental": {
+        "OpenInference: ocr_added_to_image": {
+          "n_pairs": 17,
+          "avg_list_cost_delta_usd": -7.314705882352936e-05,
+          "avg_cost_delta_usd": -3.908058823529412e-05,
+          "avg_prompt_delta": 156.41176470588235,
+          "avg_completion_delta": -100.05882352941177,
+          "avg_reasoning_delta": 0
+        },
+        "OpenInference: image_added_to_ocr": {
+          "n_pairs": 17,
+          "avg_list_cost_delta_usd": 0.00010933835294117648,
+          "avg_cost_delta_usd": 1.8067999999999997e-05,
+          "avg_prompt_delta": 201.64705882352942,
+          "avg_completion_delta": -25.705882352941178,
+          "avg_reasoning_delta": 0
+        },
+        "OpenInference: image_minus_ocr": {
+          "n_pairs": 18,
+          "avg_list_cost_delta_usd": 0.00017538066666666663,
+          "avg_cost_delta_usd": 5.556144444444444e-05,
+          "avg_prompt_delta": 36.833333333333336,
+          "avg_completion_delta": 74.22222222222223,
+          "avg_reasoning_delta": 0
+        },
+        "InferenceNet: ocr_added_to_image": {
+          "n_pairs": 2,
+          "avg_list_cost_delta_usd": -8.850000000000025e-06,
+          "avg_cost_delta_usd": -1.1067999999999983e-05,
+          "avg_prompt_delta": 76.5,
+          "avg_completion_delta": -26.5,
+          "avg_reasoning_delta": 0
+        }
+      }
+    }
+  }
+}

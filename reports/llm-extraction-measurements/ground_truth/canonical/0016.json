@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "prompt_version": "receipt-extraction-v1",
+  "source": {
+    "id": "16",
+    "image": "cord-v2/images/validation/0016.jpg",
+    "image_sha256": "6208ac5a748aaebe5fce8deaf30bb67a2ffa8ded4a0aa47ea1f09537acd3ab6a",
+    "split": "validation",
+    "model": "deepseek/deepseek-v4.1-flash",
+    "input_mode": "both",
+    "provider": "OpenInference",
+    "created_at": "2026-10-22T06:57:56+00:00"
+  },
+  "usage": {
+    "prompt_tokens": 1196,
+    "completion_tokens": 585,
+    "total_tokens": 1781,
+    "reasoning_tokens": 0,
+    "cached_tokens": 0,
+    "image_tokens": 0,
+    "cost_usd": 0.00037622,
+    "list_cost_usd": 0.0010608
+  },
+  "cost_usd": 0.00037622,
+  "extraction": {
+    "document_type": "receipt",
+    "document": {
+      "number": null,
+      "date": null,
+      "time": null,
+      "due_date": null,
+      "payment_terms": null,
+      "currency": null,
+      "country": null,
+      "language": null
+    },
+    "merchant": {
+      "name": null,
+      "legal_name": null,
+      "address": null,
+      "phone": null,
+      "email": null,
+      "website": null,
+      "tax_ids": [],
+      "store_id": null,
+      "cashier": null,
+      "table": null
+    },
+    "customer": {
+      "name": null,
+      "address": null,
+      "tax_id": null,
+      "account_id": null
+    },
+    "amounts": {
+      "subtotal": null,
+      "discount_total": null,
+      "tax_total": null,
+      "tip": null,
+      "service_charge": null,
+      "delivery_fee": null,
+      "shipping": null,
+      "rounding": null,
+      "total": 20000,
+      "amount_paid": 100000,
+      "change": 80000,
+      "amount_due": null,
+      "prior_balance": null,
+      "taxes": []
+    },
+    "payment": {
+      "method": "cash",
+      "card_brand": null,
+      "card_last4": null,
+      "transaction_id": null,
+      "auth_code": null
+    },
+    "line_items": [
+      {
+        "description": null,
+        "sku": null,
+        "quantity": 1,
+        "unit": null,
+        "unit_price": 20000,
+        "gross_amount": 20000,
+        "discount": null,
+        "net_amount": 20000,
+        "tax_rate_percent": null,
+        "category": null,
+        "notes": null
+      }
+    ],
+    "classification": {
+      "category": "unknown",
+      "subcategory": null,
+      "purpose_summary": null,
+      "is_business_expense": null,
+      "tags": []
+    },
+    "quality": {
+      "legibility": "low",
+      "handwritten": true,
+      "blur": true,
+      "glare": false,
+      "cropped": false,
+      "arithmetic_ok": true,
+      "duplicate_suspected": false,
+      "confidence": 0.3,
+      "warnings": [
+        "OCR transcript is garbled and merchant name is unreadable",
+        "Handwritten annotation '33' present",
+        "Currency cannot be determined from the document"
+      ]
+    }
+  }
+}
